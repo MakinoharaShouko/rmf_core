@@ -43,11 +43,11 @@ Eigen::Vector3d RobotContext::position() const
   const auto& l = _location.front();
   if (l.location().has_value())
   {
-    const Eigen::Vector2d& p = *l.location();
+    const Eigen::Vector3d& p = *l.location();
     return {p[0], p[1], l.orientation()};
   }
 
-  const Eigen::Vector2d& p =
+  const Eigen::Vector3d& p =
       navigation_graph().get_waypoint(l.waypoint()).get_location();
   return {p[0], p[1], l.orientation()};
 }

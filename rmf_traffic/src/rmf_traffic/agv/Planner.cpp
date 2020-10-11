@@ -268,7 +268,7 @@ public:
   Time time;
   std::size_t waypoint;
   double orientation;
-  rmf_utils::optional<Eigen::Vector2d> location;
+  rmf_utils::optional<Eigen::Vector3d> location;
   rmf_utils::optional<std::size_t> lane;
 
 };
@@ -278,7 +278,7 @@ Planner::Start::Start(
   const Time initial_time,
   const std::size_t initial_waypoint,
   const double initial_orientation,
-  rmf_utils::optional<Eigen::Vector2d> initial_location,
+  rmf_utils::optional<Eigen::Vector3d> initial_location,
   rmf_utils::optional<std::size_t> initial_lane)
 : _pimpl(rmf_utils::make_impl<Implementation>(
       Implementation{
@@ -332,14 +332,14 @@ double Planner::Start::orientation() const
 }
 
 //==============================================================================
-const rmf_utils::optional<Eigen::Vector2d>& Planner::Start::location() const
+const rmf_utils::optional<Eigen::Vector3d>& Planner::Start::location() const
 {
   return _pimpl->location;
 }
 
 //==============================================================================
 auto Planner::Start::location(
-  rmf_utils::optional<Eigen::Vector2d> initial_location) -> Start&
+  rmf_utils::optional<Eigen::Vector3d> initial_location) -> Start&
 {
   _pimpl->location = std::move(initial_location);
   return *this;
@@ -959,7 +959,7 @@ std::vector<Plan::Start> compute_plan_starts(
     if (wp.get_map_name() != map_name)
       continue;
 
-    const Eigen::Vector2d wp_location = wp.get_location();
+    const Eigen::Vector2d wp_location = wp.get_location().block<2,1>(0,0);
 
     if ( (p_location - wp_location).norm() < max_merge_waypoint_distance)
     {
@@ -983,8 +983,10 @@ std::vector<Plan::Start> compute_plan_starts(
     if (wp1.get_map_name() != map_name)
       continue;
 
-    const Eigen::Vector2d p0 = wp0.get_location();
-    const Eigen::Vector2d p1 = wp1.get_location();
+    const Eigen::Vector3d p0_3d = wp0.get_location();
+    const double height = p0_3d[2];
+    const Eigen::Vector2d p0 = p0_3d.block<2,1>(0,0);
+    const Eigen::Vector2d p1 = wp1.get_location().block<2,1>(0,0);
 
     const double lane_length = (p1 - p0).norm();
 
@@ -1009,7 +1011,7 @@ std::vector<Plan::Start> compute_plan_starts(
 
         starts.emplace_back(
           Plan::Start(
-            start_time, entry_waypoint_index, start_yaw, p_location));
+            start_time, entry_waypoint_index, start_yaw, Eigen::Vector3d({p_location[0], p_location[1], height})));
       }
     }
     // If it's larger than the lane length, then its closest point on the lane
@@ -1026,7 +1028,7 @@ std::vector<Plan::Start> compute_plan_starts(
 
         starts.emplace_back(
           Plan::Start(
-            start_time, exit_waypoint_index, start_yaw, p_location));
+            start_time, exit_waypoint_index, start_yaw, Eigen::Vector3d({p_location[0], p_location[1], height})));
       }
     }
     // If its between the entry and the exit waypoints, then we should
@@ -1040,7 +1042,7 @@ std::vector<Plan::Start> compute_plan_starts(
       {
         starts.emplace_back(
           Plan::Start(
-            start_time, exit_waypoint_index, start_yaw, p_location, i));
+            start_time, exit_waypoint_index, start_yaw, Eigen::Vector3d({p_location[0], p_location[1], height}), i));
       }
     }
   }

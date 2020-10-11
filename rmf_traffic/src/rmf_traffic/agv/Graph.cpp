@@ -34,7 +34,7 @@ public:
 
   std::string map_name;
 
-  Eigen::Vector2d location;
+  Eigen::Vector3d location;
 
   rmf_utils::optional<std::string> name = rmf_utils::nullopt;
 
@@ -74,13 +74,13 @@ auto Graph::Waypoint::set_map_name(std::string map) -> Waypoint&
 }
 
 //==============================================================================
-const Eigen::Vector2d& Graph::Waypoint::get_location() const
+const Eigen::Vector3d& Graph::Waypoint::get_location() const
 {
   return _pimpl->location;
 }
 
 //==============================================================================
-auto Graph::Waypoint::set_location(Eigen::Vector2d location) -> Waypoint&
+auto Graph::Waypoint::set_location(Eigen::Vector3d location) -> Waypoint&
 {
   _pimpl->location = std::move(location);
   return *this;
@@ -681,7 +681,7 @@ Graph::Graph()
 //==============================================================================
 auto Graph::add_waypoint(
   std::string map_name,
-  Eigen::Vector2d location) -> Waypoint&
+  Eigen::Vector3d location) -> Waypoint&
 {
   _pimpl->waypoints.emplace_back(
     Waypoint::Implementation::make(

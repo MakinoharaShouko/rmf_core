@@ -28,7 +28,7 @@
 #include <iomanip>
 
 void CHECK_WAYPOINT(rmf_traffic::agv::Graph::Waypoint wp,
-  Eigen::Vector2d waypoint_location,
+  Eigen::Vector3d waypoint_location,
   std::string test_map_name, std::size_t index, bool holding)
 {
   CHECK((wp.get_location()-waypoint_location).norm() == Approx(0));
@@ -66,33 +66,33 @@ SCENARIO("Tests for Graph API")
 
   WHEN("A non-holding waypoint is added")
   {
-    Eigen::Vector2d waypoint_location = Eigen::Vector2d{0, 0};
+    Eigen::Vector3d waypoint_location = Eigen::Vector3d{0, 0, 0};
     auto& wp1 = graph.add_waypoint(test_map_name, waypoint_location);
     CHECK(graph.num_waypoints() == 1);
     CHECK_WAYPOINT(wp1, waypoint_location, test_map_name, 0, false);
 
     wp1.set_holding_point(true);
     wp1.set_map_name("not_test");
-    wp1.set_location(Eigen::Vector2d{1, 1});
+    wp1.set_location(Eigen::Vector3d{1, 1, 0});
 
     //checking values of updated waypoint
     const auto wp = graph.get_waypoint(0);
-    CHECK_WAYPOINT(wp, Eigen::Vector2d{1, 1}, "not_test", 0, true);
+    CHECK_WAYPOINT(wp, Eigen::Vector3d{1, 1, 0}, "not_test", 0, true);
 
     WHEN("A second waypoint is added")
     {
 
-      graph.add_waypoint(test_map_name, Eigen::Vector2d{2, 2});
+      graph.add_waypoint(test_map_name, Eigen::Vector3d{2, 2, 0});
       CHECK(graph.num_waypoints() == 2);
       CHECK_WAYPOINT(graph.get_waypoint(
-          1), Eigen::Vector2d{2, 2}, test_map_name, 1, false);
+          1), Eigen::Vector3d{2, 2, 0}, test_map_name, 1, false);
     }
   }
 
   WHEN("A lane without a door is added")
   {
-    graph.add_waypoint(test_map_name, Eigen::Vector2d{0, 0});
-    graph.add_waypoint(test_map_name, Eigen::Vector2d{10, 10});
+    graph.add_waypoint(test_map_name, Eigen::Vector3d{0, 0, 0});
+    graph.add_waypoint(test_map_name, Eigen::Vector3d{10, 10, 0});
 
     rmf_traffic::agv::Graph::Lane::Node entry_node{0};
     CHECK(entry_node.waypoint_index() == 0);
@@ -122,8 +122,8 @@ SCENARIO("Tests for Graph API")
 
   WHEN("A lane with a door is added")
   {
-    graph.add_waypoint(test_map_name, Eigen::Vector2d{0, 0});
-    graph.add_waypoint(test_map_name, Eigen::Vector2d{10, 10});
+    graph.add_waypoint(test_map_name, Eigen::Vector3d{0, 0, 0});
+    graph.add_waypoint(test_map_name, Eigen::Vector3d{10, 10, 0});
 
     //Door not implemented yet
     // auto door =rmf_traffic::agv::Graph::Door();
@@ -138,8 +138,8 @@ SCENARIO("Tests for Graph API")
     const std::size_t N = 100;
 
     for (std::size_t i = 0; i < N; i++)
-      graph.add_waypoint(test_map_name, Eigen::Vector2d{std::rand(),
-          std::rand()});
+      graph.add_waypoint(test_map_name, Eigen::Vector3d{std::rand(),
+          std::rand(), 0});
 
     CHECK(graph.num_waypoints() == N);
 
@@ -148,7 +148,7 @@ SCENARIO("Tests for Graph API")
       //CHECKING for Independence
       rmf_traffic::agv::Graph graph2;
       graph2 = graph;
-      graph.add_waypoint(test_map_name, Eigen::Vector2d{-10, -10});
+      graph.add_waypoint(test_map_name, Eigen::Vector3d{-10, -10, 0});
       CHECK(graph.num_waypoints() == N+1);
       CHECK(graph2.num_waypoints() == N);
     }
@@ -156,7 +156,7 @@ SCENARIO("Tests for Graph API")
     WHEN("Copy constructor is checked")
     {
       rmf_traffic::agv::Graph graph2{graph};
-      graph.add_waypoint(test_map_name, Eigen::Vector2d{-10, -10});
+      graph.add_waypoint(test_map_name, Eigen::Vector3d{-10, -10, 0});
       CHECK(graph.num_waypoints() == N+1);
       CHECK(graph2.num_waypoints() == N);
     }
@@ -167,7 +167,7 @@ SCENARIO("Tests for Graph API")
       rmf_traffic::agv::Graph graph2;
       graph2 = std::move(moved);
       moved = graph;
-      graph.add_waypoint(test_map_name, Eigen::Vector2d{-10, -10});
+      graph.add_waypoint(test_map_name, Eigen::Vector3d{-10, -10, 0});
 
       CHECK(graph.num_waypoints() == N+1);
       CHECK(graph2.num_waypoints() == N);
@@ -179,7 +179,7 @@ SCENARIO("Tests for Graph API")
       rmf_traffic::agv::Graph moved = graph;
       rmf_traffic::agv::Graph graph2 = std::move(moved);
       moved = graph;
-      graph.add_waypoint(test_map_name, Eigen::Vector2d{-10, -10});
+      graph.add_waypoint(test_map_name, Eigen::Vector3d{-10, -10, 0});
 
       CHECK(graph.num_waypoints() == N+1);
       CHECK(graph2.num_waypoints() == N);

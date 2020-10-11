@@ -94,9 +94,11 @@ void RobotUpdateHandle::update_position(
     {
       const auto& graph = context->navigation_graph();
       const auto wp = graph.get_lane(l).exit().waypoint_index();
+      Eigen::Vector3d pos;
+      pos << position[0], position[1], 0;
       starts.push_back(
         {
-          now, wp, position[2], Eigen::Vector2d(position.block<2,1>(0,0)), l
+          now, wp, position[2], pos, l
         });
     }
 
@@ -115,13 +117,15 @@ void RobotUpdateHandle::update_position(
 {
   if (const auto& context = _pimpl->get_context())
   {
+    Eigen::Vector3d pos;
+    pos << position[0], position[1], 0;
     context->worker().schedule(
-          [context, position, waypoint](const auto&)
+          [context, position, waypoint, pos](const auto&)
     {
       context->_location = {
         rmf_traffic::agv::Plan::Start(
           rmf_traffic_ros2::convert(context->node()->now()),
-          waypoint, position[2], Eigen::Vector2d(position.block<2,1>(0,0)))
+          waypoint, position[2], pos)
       };
     });
   }

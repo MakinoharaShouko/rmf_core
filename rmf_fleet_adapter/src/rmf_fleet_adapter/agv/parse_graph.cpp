@@ -65,12 +65,12 @@ rmf_traffic::agv::Graph parse_graph(
     const YAML::Node& vertices = level.second["vertices"];
     for (const auto& vertex : vertices)
     {
-      const Eigen::Vector2d location{
-        vertex[0].as<double>(), vertex[1].as<double>()};
+      const Eigen::Vector3d location{
+        vertex[0].as<double>(), vertex[1].as<double>(), vertex[2].as<double>()};
 
       auto& wp = graph.add_waypoint(map_name, location);
 
-      const YAML::Node& options = vertex[2];
+      const YAML::Node& options = vertex[3];
       const YAML::Node& name_option = options["name"];
       if (name_option)
       {

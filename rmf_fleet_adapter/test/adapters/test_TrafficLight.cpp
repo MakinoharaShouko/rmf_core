@@ -49,7 +49,7 @@ std::vector<rmf_fleet_adapter::agv::Waypoint> make_path(
     const auto& wp = graph.get_waypoint(index);
     Eigen::Vector3d p;
     p[2] = orientation;
-    p.block<2,1>(0,0) = wp.get_location();
+    p.block<2,1>(0,0) = wp.get_location().block<2,1>(0,0);
     path.emplace_back(wp.get_map_name(), p);
   }
 
@@ -61,17 +61,17 @@ rmf_traffic::agv::Graph make_test_graph()
 {
   const std::string test_map_name = "test_map";
   rmf_traffic::agv::Graph graph;
-  graph.add_waypoint(test_map_name, {0.0, -10.0}); // 0
-  graph.add_waypoint(test_map_name, {0.0, -5.0});  // 1
-  graph.add_waypoint(test_map_name, {5.0, -5.0}).set_holding_point(true);  // 2
-  graph.add_waypoint(test_map_name, {-10.0, 0.0}); // 3
-  graph.add_waypoint(test_map_name, {-5.0, 0.0}); // 4
-  graph.add_waypoint(test_map_name, {0.0, 0.0}); // 5
-  graph.add_waypoint(test_map_name, {5.0, 0.0}); // 6
-  graph.add_waypoint(test_map_name, {10.0, 0.0}); // 7
-  graph.add_waypoint(test_map_name, {0.0, 5.0}); // 8
-  graph.add_waypoint(test_map_name, {5.0, 5.0}).set_holding_point(true); // 9
-  graph.add_waypoint(test_map_name, {0.0, 10.0}); // 10
+  graph.add_waypoint(test_map_name, {0.0, -10.0, 0}); // 0
+  graph.add_waypoint(test_map_name, {0.0, -5.0, 0});  // 1
+  graph.add_waypoint(test_map_name, {5.0, -5.0, 0}).set_holding_point(true);  // 2
+  graph.add_waypoint(test_map_name, {-10.0, 0.0, 0}); // 3
+  graph.add_waypoint(test_map_name, {-5.0, 0.0, 0}); // 4
+  graph.add_waypoint(test_map_name, {0.0, 0.0, 0}); // 5
+  graph.add_waypoint(test_map_name, {5.0, 0.0, 0}); // 6
+  graph.add_waypoint(test_map_name, {10.0, 0.0, 0}); // 7
+  graph.add_waypoint(test_map_name, {0.0, 5.0, 0}); // 8
+  graph.add_waypoint(test_map_name, {5.0, 5.0, 0}).set_holding_point(true); // 9
+  graph.add_waypoint(test_map_name, {0.0, 10.0, 0}); // 10
 
   /*
    *                   10

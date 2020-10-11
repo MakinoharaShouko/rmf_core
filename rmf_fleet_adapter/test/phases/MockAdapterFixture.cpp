@@ -41,17 +41,17 @@ MockAdapterFixture::MockAdapterFixture()
   ros_node = adapter->node();
 
   const std::string test_map_name = "test_map";
-  graph.add_waypoint(test_map_name, {0.0, -10.0}); // 0
-  graph.add_waypoint(test_map_name, {0.0, -5.0});  // 1
-  graph.add_waypoint(test_map_name, {5.0, -5.0}).set_holding_point(true);  // 2
-  graph.add_waypoint(test_map_name, {-10.0, 0.0}); // 3
-  graph.add_waypoint(test_map_name, {-5.0, 0.0}); // 4
-  graph.add_waypoint(test_map_name, {0.0, 0.0}); // 5
-  graph.add_waypoint(test_map_name, {5.0, 0.0}); // 6
-  graph.add_waypoint(test_map_name, {10.0, 0.0}); // 7
-  graph.add_waypoint(test_map_name, {0.0, 5.0}); // 8
-  graph.add_waypoint(test_map_name, {5.0, 5.0}).set_holding_point(true); // 9
-  graph.add_waypoint(test_map_name, {0.0, 10.0}); // 10
+  graph.add_waypoint(test_map_name, {0.0, -10.0, 0}); // 0
+  graph.add_waypoint(test_map_name, {0.0, -5.0, 0});  // 1
+  graph.add_waypoint(test_map_name, {5.0, -5.0, 0}).set_holding_point(true);  // 2
+  graph.add_waypoint(test_map_name, {-10.0, 0.0, 0}); // 3
+  graph.add_waypoint(test_map_name, {-5.0, 0.0, 0}); // 4
+  graph.add_waypoint(test_map_name, {0.0, 0.0, 0}); // 5
+  graph.add_waypoint(test_map_name, {5.0, 0.0, 0}); // 6
+  graph.add_waypoint(test_map_name, {10.0, 0.0, 0}); // 7
+  graph.add_waypoint(test_map_name, {0.0, 5.0, 0}); // 8
+  graph.add_waypoint(test_map_name, {5.0, 5.0, 0}).set_holding_point(true); // 9
+  graph.add_waypoint(test_map_name, {0.0, 10.0, 0}); // 10
 
   /*
    *                   10

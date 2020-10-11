@@ -110,18 +110,18 @@ SCENARIO("Test difficult 3-way scenarios")
   const std::string test_map_name = "test_map";
 
   rmf_traffic::agv::Graph graph_a;
-  graph_a.add_waypoint(test_map_name, {18.013, -15.518}); // 0
-  graph_a.add_waypoint(test_map_name, {12.417, -15.536}); // 1
-  graph_a.add_waypoint(test_map_name, { 9.990, -15.543}); // 2
-  graph_a.add_waypoint(test_map_name, { 9.482, -15.534}); // 3
-  graph_a.add_waypoint(test_map_name, {17.934, -20.165}); // 4
-  graph_a.add_waypoint(test_map_name, {17.943, -21.654}); // 5
-  graph_a.add_waypoint(test_map_name, {22.370, -21.593}); // 6
-  graph_a.add_waypoint(test_map_name, {22.370, -22.660}); // 7
-  graph_a.add_waypoint(test_map_name, {22.399, -23.540}); // 8
-  graph_a.add_waypoint(test_map_name, {18.968, -20.183}); // 9
-  graph_a.add_waypoint(test_map_name, {20.137, -20.188}); // 10
-  graph_a.add_waypoint(test_map_name, { 8.185, -15.535}); // 11
+  graph_a.add_waypoint(test_map_name, {18.013, -15.518, 0}); // 0
+  graph_a.add_waypoint(test_map_name, {12.417, -15.536, 0}); // 1
+  graph_a.add_waypoint(test_map_name, { 9.990, -15.543, 0}); // 2
+  graph_a.add_waypoint(test_map_name, { 9.482, -15.534, 0}); // 3
+  graph_a.add_waypoint(test_map_name, {17.934, -20.165, 0}); // 4
+  graph_a.add_waypoint(test_map_name, {17.943, -21.654, 0}); // 5
+  graph_a.add_waypoint(test_map_name, {22.370, -21.593, 0}); // 6
+  graph_a.add_waypoint(test_map_name, {22.370, -22.660, 0}); // 7
+  graph_a.add_waypoint(test_map_name, {22.399, -23.540, 0}); // 8
+  graph_a.add_waypoint(test_map_name, {18.968, -20.183, 0}); // 9
+  graph_a.add_waypoint(test_map_name, {20.137, -20.188, 0}); // 10
+  graph_a.add_waypoint(test_map_name, { 8.185, -15.535, 0}); // 11
 
   graph_a.add_lane(0, 1);
   graph_a.add_lane(1, 0);
@@ -148,23 +148,23 @@ SCENARIO("Test difficult 3-way scenarios")
 
 
   rmf_traffic::agv::Graph graph_b;
-  graph_b.add_waypoint(test_map_name, {14.052, -23.840}); // 0
-  graph_b.add_waypoint(test_map_name, {14.081, -21.636}); // 1
-  graph_b.add_waypoint(test_map_name, {10.430, -23.964}); // 2
-  graph_b.add_waypoint(test_map_name, {10.432, -21.788}); // 3
-  graph_b.add_waypoint(test_map_name, {10.429, -25.995}); // 4
-  graph_b.add_waypoint(test_map_name, { 8.093, -23.870}); // 5
-  graph_b.add_waypoint(test_map_name, { 8.055, -21.818}); // 6
-  graph_b.add_waypoint(test_map_name, { 8.068, -25.961}); // 7
-  graph_b.add_waypoint(test_map_name, {14.920, -21.585}); // 8
-  graph_b.add_waypoint(test_map_name, {14.918, -23.846}); // 9
-  graph_b.add_waypoint(test_map_name, {18.435, -21.633}); // 10
-  graph_b.add_waypoint(test_map_name, {18.511, -17.278}); // 11
-  graph_b.add_waypoint(test_map_name, {16.830, -17.278}); // 12
-  graph_b.add_waypoint(test_map_name, {11.829, -21.687}); // 13
-  graph_b.add_waypoint(test_map_name, {11.892, -15.379}); // 14
-  graph_b.add_waypoint(test_map_name, {16.876, -15.313}); // 15
-  graph_b.add_waypoint(test_map_name, {11.829, -19.079}); // 16
+  graph_b.add_waypoint(test_map_name, {14.052, -23.840, 0}); // 0
+  graph_b.add_waypoint(test_map_name, {14.081, -21.636, 0}); // 1
+  graph_b.add_waypoint(test_map_name, {10.430, -23.964, 0}); // 2
+  graph_b.add_waypoint(test_map_name, {10.432, -21.788, 0}); // 3
+  graph_b.add_waypoint(test_map_name, {10.429, -25.995, 0}); // 4
+  graph_b.add_waypoint(test_map_name, { 8.093, -23.870, 0}); // 5
+  graph_b.add_waypoint(test_map_name, { 8.055, -21.818, 0}); // 6
+  graph_b.add_waypoint(test_map_name, { 8.068, -25.961, 0}); // 7
+  graph_b.add_waypoint(test_map_name, {14.920, -21.585, 0}); // 8
+  graph_b.add_waypoint(test_map_name, {14.918, -23.846, 0}); // 9
+  graph_b.add_waypoint(test_map_name, {18.435, -21.633, 0}); // 10
+  graph_b.add_waypoint(test_map_name, {18.511, -17.278, 0}); // 11
+  graph_b.add_waypoint(test_map_name, {16.830, -17.278, 0}); // 12
+  graph_b.add_waypoint(test_map_name, {11.829, -21.687, 0}); // 13
+  graph_b.add_waypoint(test_map_name, {11.892, -15.379, 0}); // 14
+  graph_b.add_waypoint(test_map_name, {16.876, -15.313, 0}); // 15
+  graph_b.add_waypoint(test_map_name, {11.829, -19.079, 0}); // 16
 
   graph_b.add_lane(0, 1);
   graph_b.add_lane(1, 0);
@@ -337,17 +337,17 @@ SCENARIO("Test cycling through all negotiation alternatives")
 
   const std::string test_map_name = "test_map";
   rmf_traffic::agv::Graph graph;
-  graph.add_waypoint(test_map_name, {0.0, -10.0}); // 0
-  graph.add_waypoint(test_map_name, {0.0, -5.0});  // 1
-  graph.add_waypoint(test_map_name, {5.0, -5.0}).set_holding_point(true);  // 2
-  graph.add_waypoint(test_map_name, {-10.0, 0.0}); // 3
-  graph.add_waypoint(test_map_name, {-5.0, 0.0}); // 4
-  graph.add_waypoint(test_map_name, {0.0, 0.0}); // 5
-  graph.add_waypoint(test_map_name, {5.0, 0.0}); // 6
-  graph.add_waypoint(test_map_name, {10.0, 0.0}); // 7
-  graph.add_waypoint(test_map_name, {0.0, 5.0}); // 8
-  graph.add_waypoint(test_map_name, {5.0, 5.0}).set_holding_point(true); // 9
-  graph.add_waypoint(test_map_name, {0.0, 10.0}); // 10
+  graph.add_waypoint(test_map_name, {0.0, -10.0, 0}); // 0
+  graph.add_waypoint(test_map_name, {0.0, -5.0, 0});  // 1
+  graph.add_waypoint(test_map_name, {5.0, -5.0, 0}).set_holding_point(true);  // 2
+  graph.add_waypoint(test_map_name, {-10.0, 0.0, 0}); // 3
+  graph.add_waypoint(test_map_name, {-5.0, 0.0, 0}); // 4
+  graph.add_waypoint(test_map_name, {0.0, 0.0, 0}); // 5
+  graph.add_waypoint(test_map_name, {5.0, 0.0, 0}); // 6
+  graph.add_waypoint(test_map_name, {10.0, 0.0, 0}); // 7
+  graph.add_waypoint(test_map_name, {0.0, 5.0, 0}); // 8
+  graph.add_waypoint(test_map_name, {5.0, 5.0, 0}).set_holding_point(true); // 9
+  graph.add_waypoint(test_map_name, {0.0, 10.0, 0}); // 10
 
   /*
    *                  10

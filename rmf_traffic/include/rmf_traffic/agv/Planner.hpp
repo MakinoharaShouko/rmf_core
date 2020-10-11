@@ -258,7 +258,7 @@ public:
       Time initial_time,
       std::size_t initial_waypoint,
       double initial_orientation,
-      rmf_utils::optional<Eigen::Vector2d> location = rmf_utils::nullopt,
+      rmf_utils::optional<Eigen::Vector3d> location = rmf_utils::nullopt,
       rmf_utils::optional<std::size_t> initial_lane = rmf_utils::nullopt);
 
     /// Set the starting time of a plan
@@ -280,10 +280,10 @@ public:
     double orientation() const;
 
     /// Get the starting location, if one was specified
-    const rmf_utils::optional<Eigen::Vector2d>& location() const;
+    const rmf_utils::optional<Eigen::Vector3d>& location() const;
 
     /// Set the starting location, or remove it by using rmf_utils::nullopt
-    Start& location(rmf_utils::optional<Eigen::Vector2d> initial_location);
+    Start& location(rmf_utils::optional<Eigen::Vector3d> initial_location);
 
     /// Get the starting lane, if one was specified
     const rmf_utils::optional<std::size_t>& lane() const;

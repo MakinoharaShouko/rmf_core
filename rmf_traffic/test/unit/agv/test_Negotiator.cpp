@@ -86,17 +86,17 @@ SCENARIO("Test Plan Negotiation Between Two Participants")
 
   const std::string test_map_name = "test_map";
   rmf_traffic::agv::Graph graph;
-  graph.add_waypoint(test_map_name, {0.0, -10.0}); // 0
-  graph.add_waypoint(test_map_name, {0.0, -5.0});  // 1
-  graph.add_waypoint(test_map_name, {5.0, -5.0}).set_holding_point(true);  // 2
-  graph.add_waypoint(test_map_name, {-10.0, 0.0}); // 3
-  graph.add_waypoint(test_map_name, {-5.0, 0.0}); // 4
-  graph.add_waypoint(test_map_name, {0.0, 0.0}); // 5
-  graph.add_waypoint(test_map_name, {5.0, 0.0}); // 6
-  graph.add_waypoint(test_map_name, {10.0, 0.0}); // 7
-  graph.add_waypoint(test_map_name, {0.0, 5.0}); // 8
-  graph.add_waypoint(test_map_name, {5.0, 5.0}).set_holding_point(true); // 9
-  graph.add_waypoint(test_map_name, {0.0, 10.0}); // 10
+  graph.add_waypoint(test_map_name, {0.0, -10.0, 0}); // 0
+  graph.add_waypoint(test_map_name, {0.0, -5.0, 0});  // 1
+  graph.add_waypoint(test_map_name, {5.0, -5.0, 0}).set_holding_point(true);  // 2
+  graph.add_waypoint(test_map_name, {-10.0, 0.0, 0}); // 3
+  graph.add_waypoint(test_map_name, {-5.0, 0.0, 0}); // 4
+  graph.add_waypoint(test_map_name, {0.0, 0.0, 0}); // 5
+  graph.add_waypoint(test_map_name, {5.0, 0.0, 0}); // 6
+  graph.add_waypoint(test_map_name, {10.0, 0.0, 0}); // 7
+  graph.add_waypoint(test_map_name, {0.0, 5.0, 0}); // 8
+  graph.add_waypoint(test_map_name, {5.0, 5.0, 0}).set_holding_point(true); // 9
+  graph.add_waypoint(test_map_name, {0.0, 10.0, 0}); // 10
 
   /*
    *                  10
@@ -386,11 +386,11 @@ SCENARIO("Multi-participant negotiation")
 
   const std::string test_map_name = "test_map";
   rmf_traffic::agv::Graph graph;
-  graph.add_waypoint(test_map_name, { 0.0, -5.0}); // 0
-  graph.add_waypoint(test_map_name, {-5.0, 0.0}); // 1
-  graph.add_waypoint(test_map_name, { 0.0, 0.0}); // 2
-  graph.add_waypoint(test_map_name, { 5.0,  0.0}); // 3
-  graph.add_waypoint(test_map_name, { 0.0, 5.0}); // 4
+  graph.add_waypoint(test_map_name, { 0.0, -5.0, 0}); // 0
+  graph.add_waypoint(test_map_name, {-5.0, 0.0, 0}); // 1
+  graph.add_waypoint(test_map_name, { 0.0, 0.0, 0}); // 2
+  graph.add_waypoint(test_map_name, { 5.0,  0.0, 0}); // 3
+  graph.add_waypoint(test_map_name, { 0.0, 5.0, 0}); // 4
 
   /*
    *         4
@@ -440,7 +440,7 @@ SCENARIO("Multi-participant negotiation")
 namespace {
 using VertexId = std::string;
 using IsHoldingSpot = bool;
-using VertexMap = std::unordered_map<VertexId, std::pair<Eigen::Vector2d,
+using VertexMap = std::unordered_map<VertexId, std::pair<Eigen::Vector3d,
     IsHoldingSpot>>;
 
 using EdgeId = std::string;
@@ -602,10 +602,10 @@ SCENARIO("A Single Lane")
    *    A <-> B <-> C <-> D
    */
 
-  vertices.insert({"A", {{-3.0, 0.0}, IsHoldingSpot(false)}});
-  vertices.insert({"B", {{0.0, 0.0}, IsHoldingSpot(false)}});
-  vertices.insert({"C", {{3.0, 0.0}, IsHoldingSpot(false)}});
-  vertices.insert({"D", {{6.0, 0.0}, IsHoldingSpot(false)}});
+  vertices.insert({"A", {{-3.0, 0.0, 0}, IsHoldingSpot(false)}});
+  vertices.insert({"B", {{0.0, 0.0, 0}, IsHoldingSpot(false)}});
+  vertices.insert({"C", {{3.0, 0.0, 0}, IsHoldingSpot(false)}});
+  vertices.insert({"D", {{6.0, 0.0, 0}, IsHoldingSpot(false)}});
 
   edges.insert({"AB", {{"A", "B"}, IsBidirectional(true)}});
   edges.insert({"BC", {{"B", "C"}, IsBidirectional(true)}});
@@ -938,10 +938,10 @@ SCENARIO("A single lane, limited holding spaces")
    *    A <-> B(H) <-> C <-> D(H)
    */
 
-  vertices.insert({"A", {{-3.0, 0.0}, IsHoldingSpot(false)}});
-  vertices.insert({"B", {{0.0, 0.0}, IsHoldingSpot(false)}});
-  vertices.insert({"C", {{3.0, 0.0}, IsHoldingSpot(false)}});
-  vertices.insert({"D", {{6.0, 0.0}, IsHoldingSpot(false)}});
+  vertices.insert({"A", {{-3.0, 0.0, 0}, IsHoldingSpot(false)}});
+  vertices.insert({"B", {{0.0, 0.0, 0}, IsHoldingSpot(false)}});
+  vertices.insert({"C", {{3.0, 0.0, 0}, IsHoldingSpot(false)}});
+  vertices.insert({"D", {{6.0, 0.0, 0}, IsHoldingSpot(false)}});
 
   edges.insert({"AB", {{"A", "B"}, IsBidirectional(true)}});
   edges.insert({"BC", {{"B", "C"}, IsBidirectional(true)}});
@@ -1073,10 +1073,10 @@ SCENARIO("A single loop")
    *         D(H)<------>C(H)
    */
 
-  vertices.insert({"A", {{0.0, 0.0}, IsHoldingSpot(false)}});
-  vertices.insert({"B", {{6.0, 0.0}, IsHoldingSpot(false)}});
-  vertices.insert({"C", {{6.0, -6.0}, IsHoldingSpot(false)}});
-  vertices.insert({"D", {{-0.0, -6.0}, IsHoldingSpot(false)}});
+  vertices.insert({"A", {{0.0, 0.0, 0}, IsHoldingSpot(false)}});
+  vertices.insert({"B", {{6.0, 0.0, 0}, IsHoldingSpot(false)}});
+  vertices.insert({"C", {{6.0, -6.0, 0}, IsHoldingSpot(false)}});
+  vertices.insert({"D", {{-0.0, -6.0, 0}, IsHoldingSpot(false)}});
 
   edges.insert({"AB", {{"A", "B"}, IsBidirectional(true)}});
   edges.insert({"BC", {{"B", "C"}, IsBidirectional(true)}});
@@ -1207,11 +1207,11 @@ SCENARIO("A single lane with an alcove holding space")
    *
    */
 
-  vertices.insert({"A", {{-3.0, 0.0}, IsHoldingSpot(false)}});
-  vertices.insert({"B", {{0.0, 0.0}, IsHoldingSpot(false)}});
-  vertices.insert({"C", {{3.0, 0.0}, IsHoldingSpot(false)}});
-  vertices.insert({"D", {{6.0, 0.0}, IsHoldingSpot(false)}});
-  vertices.insert({"E", {{0.0, 3.0}, IsHoldingSpot(false)}});
+  vertices.insert({"A", {{-3.0, 0.0, 0}, IsHoldingSpot(false)}});
+  vertices.insert({"B", {{0.0, 0.0, 0}, IsHoldingSpot(false)}});
+  vertices.insert({"C", {{3.0, 0.0, 0}, IsHoldingSpot(false)}});
+  vertices.insert({"D", {{6.0, 0.0, 0}, IsHoldingSpot(false)}});
+  vertices.insert({"E", {{0.0, 3.0, 0}, IsHoldingSpot(false)}});
 
   edges.insert({"AB", {{"A", "B"}, IsBidirectional(true)}});
   edges.insert({"BC", {{"B", "C"}, IsBidirectional(true)}});
@@ -1607,12 +1607,12 @@ SCENARIO("A single lane with a alternate one way path")
    *      A(H) <-----> B(H) <------> C(H) <------> D(H)
    */
 
-  vertices.insert({"A", {{-3.0, 0.0}, IsHoldingSpot(false)}});
-  vertices.insert({"B", {{0.0, 0.0}, IsHoldingSpot(false)}});
-  vertices.insert({"C", {{3.0, 0.0}, IsHoldingSpot(false)}});
-  vertices.insert({"D", {{6.0, 0.0}, IsHoldingSpot(false)}});
-  vertices.insert({"E", {{0.0, 3.0}, IsHoldingSpot(false)}});
-  vertices.insert({"F", {{3.0, 3.0}, IsHoldingSpot(false)}});
+  vertices.insert({"A", {{-3.0, 0.0, 0}, IsHoldingSpot(false)}});
+  vertices.insert({"B", {{0.0, 0.0, 0}, IsHoldingSpot(false)}});
+  vertices.insert({"C", {{3.0, 0.0, 0}, IsHoldingSpot(false)}});
+  vertices.insert({"D", {{6.0, 0.0, 0}, IsHoldingSpot(false)}});
+  vertices.insert({"E", {{0.0, 3.0, 0}, IsHoldingSpot(false)}});
+  vertices.insert({"F", {{3.0, 3.0, 0}, IsHoldingSpot(false)}});
 
   edges.insert({"AB", {{"A", "B"}, IsBidirectional(true)}});
   edges.insert({"BC", {{"B", "C"}, IsBidirectional(true)}});
@@ -1738,12 +1738,12 @@ SCENARIO("A single lane with a alternate two way path")
    *      A(H) <-----> B(H) <------> C(H) <------> D(H)
    */
 
-  vertices.insert({"A", {{-3.0, 0.0}, IsHoldingSpot(false)}});
-  vertices.insert({"B", {{0.0, 0.0}, IsHoldingSpot(false)}});
-  vertices.insert({"C", {{3.0, 0.0}, IsHoldingSpot(false)}});
-  vertices.insert({"D", {{6.0, 0.0}, IsHoldingSpot(false)}});
-  vertices.insert({"E", {{0.0, 3.0}, IsHoldingSpot(false)}});
-  vertices.insert({"F", {{3.0, 3.0}, IsHoldingSpot(false)}});
+  vertices.insert({"A", {{-3.0, 0.0, 0}, IsHoldingSpot(false)}});
+  vertices.insert({"B", {{0.0, 0.0, 0}, IsHoldingSpot(false)}});
+  vertices.insert({"C", {{3.0, 0.0, 0}, IsHoldingSpot(false)}});
+  vertices.insert({"D", {{6.0, 0.0, 0}, IsHoldingSpot(false)}});
+  vertices.insert({"E", {{0.0, 3.0, 0}, IsHoldingSpot(false)}});
+  vertices.insert({"F", {{3.0, 3.0, 0}, IsHoldingSpot(false)}});
 
   edges.insert({"AB", {{"A", "B"}, IsBidirectional(true)}});
   edges.insert({"BC", {{"B", "C"}, IsBidirectional(true)}});
@@ -1871,15 +1871,15 @@ SCENARIO("A single loop with alcoves at each vertex")
    *      D'               C'
    */
 
-  vertices.insert({"A", {{0.0, 0.0}, IsHoldingSpot(false)}});
-  vertices.insert({"B", {{6.0, 0.0}, IsHoldingSpot(false)}});
-  vertices.insert({"C", {{6.0, -6.0}, IsHoldingSpot(false)}});
-  vertices.insert({"D", {{-0.0, -6.0}, IsHoldingSpot(false)}});
+  vertices.insert({"A", {{0.0, 0.0, 0}, IsHoldingSpot(false)}});
+  vertices.insert({"B", {{6.0, 0.0, 0}, IsHoldingSpot(false)}});
+  vertices.insert({"C", {{6.0, -6.0, 0}, IsHoldingSpot(false)}});
+  vertices.insert({"D", {{-0.0, -6.0, 0}, IsHoldingSpot(false)}});
 
-  vertices.insert({"A'", {{-3.0, 0.0}, IsHoldingSpot(false)}});
-  vertices.insert({"B'", {{9.0, 0.0}, IsHoldingSpot(false)}});
-  vertices.insert({"C'", {{9.0, -6.0}, IsHoldingSpot(false)}});
-  vertices.insert({"D'", {{-3.0, -6.0}, IsHoldingSpot(false)}});
+  vertices.insert({"A'", {{-3.0, 0.0, 0}, IsHoldingSpot(false)}});
+  vertices.insert({"B'", {{9.0, 0.0, 0}, IsHoldingSpot(false)}});
+  vertices.insert({"C'", {{9.0, -6.0, 0}, IsHoldingSpot(false)}});
+  vertices.insert({"D'", {{-3.0, -6.0, 0}, IsHoldingSpot(false)}});
 
   edges.insert({"AB", {{"A", "B"}, IsBidirectional(true)}});
   edges.insert({"BC", {{"B", "C"}, IsBidirectional(true)}});
@@ -2147,31 +2147,31 @@ SCENARIO("fan-in-fan-out bottleneck")
    */
 
   // Vertices
-  vertices.insert({"A", {{-6.0, 6.0}, IsHoldingSpot(false)}});
-  vertices.insert({"B", {{-3.0, 6.0}, IsHoldingSpot(true)}});
-  vertices.insert({"C", {{0.0, 6.0}, IsHoldingSpot(false)}});
-  vertices.insert({"D", {{3.0, 6.0}, IsHoldingSpot(true)}});
-  vertices.insert({"E", {{6.0, 6.0}, IsHoldingSpot(false)}});
+  vertices.insert({"A", {{-6.0, 6.0, 0}, IsHoldingSpot(false)}});
+  vertices.insert({"B", {{-3.0, 6.0, 0}, IsHoldingSpot(true)}});
+  vertices.insert({"C", {{0.0, 6.0, 0}, IsHoldingSpot(false)}});
+  vertices.insert({"D", {{3.0, 6.0, 0}, IsHoldingSpot(true)}});
+  vertices.insert({"E", {{6.0, 6.0, 0}, IsHoldingSpot(false)}});
 
-  vertices.insert({"A'", {{-6.0, 3.0}, IsHoldingSpot(false)}});
-  vertices.insert({"B'", {{-3.0, 3.0}, IsHoldingSpot(false)}});
-  vertices.insert({"C'", {{0.0, 3.0}, IsHoldingSpot(false)}});
-  vertices.insert({"D'", {{3.0, 3.0}, IsHoldingSpot(false)}});
-  vertices.insert({"E'", {{6.0, 3.0}, IsHoldingSpot(false)}});
+  vertices.insert({"A'", {{-6.0, 3.0, 0}, IsHoldingSpot(false)}});
+  vertices.insert({"B'", {{-3.0, 3.0, 0}, IsHoldingSpot(false)}});
+  vertices.insert({"C'", {{0.0, 3.0, 0}, IsHoldingSpot(false)}});
+  vertices.insert({"D'", {{3.0, 3.0, 0}, IsHoldingSpot(false)}});
+  vertices.insert({"E'", {{6.0, 3.0, 0}, IsHoldingSpot(false)}});
 
-  vertices.insert({"F", {{0.0, 0.0}, IsHoldingSpot(false)}});
+  vertices.insert({"F", {{0.0, 0.0, 0}, IsHoldingSpot(false)}});
 
-  vertices.insert({"V'", {{-6.0, -3.0}, IsHoldingSpot(false)}});
-  vertices.insert({"W'", {{-3.0, -3.0}, IsHoldingSpot(false)}});
-  vertices.insert({"X'", {{0.0, -3.0}, IsHoldingSpot(false)}});
-  vertices.insert({"Y'", {{3.0, -3.0}, IsHoldingSpot(false)}});
-  vertices.insert({"Z'", {{6.0, -3.0}, IsHoldingSpot(false)}});
+  vertices.insert({"V'", {{-6.0, -3.0, 0}, IsHoldingSpot(false)}});
+  vertices.insert({"W'", {{-3.0, -3.0, 0}, IsHoldingSpot(false)}});
+  vertices.insert({"X'", {{0.0, -3.0, 0}, IsHoldingSpot(false)}});
+  vertices.insert({"Y'", {{3.0, -3.0, 0}, IsHoldingSpot(false)}});
+  vertices.insert({"Z'", {{6.0, -3.0, 0}, IsHoldingSpot(false)}});
 
-  vertices.insert({"V", {{-6.0, -6.0}, IsHoldingSpot(false)}});
-  vertices.insert({"W", {{-3.0, -6.0}, IsHoldingSpot(true)}});
-  vertices.insert({"X", {{0.0, -6.0}, IsHoldingSpot(false)}});
-  vertices.insert({"Y", {{3.0, -6.0}, IsHoldingSpot(true)}});
-  vertices.insert({"Z", {{6.0, -6.0}, IsHoldingSpot(false)}});
+  vertices.insert({"V", {{-6.0, -6.0, 0}, IsHoldingSpot(false)}});
+  vertices.insert({"W", {{-3.0, -6.0, 0}, IsHoldingSpot(true)}});
+  vertices.insert({"X", {{0.0, -6.0, 0}, IsHoldingSpot(false)}});
+  vertices.insert({"Y", {{3.0, -6.0, 0}, IsHoldingSpot(true)}});
+  vertices.insert({"Z", {{6.0, -6.0, 0}, IsHoldingSpot(false)}});
 
   // Edges
   edges.insert({"AA'", {{"A", "A'"}, IsBidirectional(true)}});
@@ -2615,16 +2615,16 @@ SCENARIO("Fully connected graph of 10 vertices")
   VertexMap vertices;
   EdgeMap edges;
 
-  vertices.insert({"A", {{0.0, 0.0}, IsHoldingSpot(false)}});
-  vertices.insert({"B", {{3.0, 0.0}, IsHoldingSpot(false)}});
-  vertices.insert({"C", {{6.0, 0.0}, IsHoldingSpot(false)}});
-  vertices.insert({"D", {{9.0, 0.0}, IsHoldingSpot(false)}});
-  vertices.insert({"E", {{12.0, 0.0}, IsHoldingSpot(false)}});
-  vertices.insert({"F", {{15.0, 0.0}, IsHoldingSpot(false)}});
-  vertices.insert({"G", {{18.0, 0.0}, IsHoldingSpot(false)}});
-  vertices.insert({"H", {{21.0, 0.0}, IsHoldingSpot(false)}});
-  vertices.insert({"I", {{24.0, 0.0}, IsHoldingSpot(false)}});
-  vertices.insert({"J", {{27.0, 0.0}, IsHoldingSpot(false)}});
+  vertices.insert({"A", {{0.0, 0.0, 0}, IsHoldingSpot(false)}});
+  vertices.insert({"B", {{3.0, 0.0, 0}, IsHoldingSpot(false)}});
+  vertices.insert({"C", {{6.0, 0.0, 0}, IsHoldingSpot(false)}});
+  vertices.insert({"D", {{9.0, 0.0, 0}, IsHoldingSpot(false)}});
+  vertices.insert({"E", {{12.0, 0.0, 0}, IsHoldingSpot(false)}});
+  vertices.insert({"F", {{15.0, 0.0, 0}, IsHoldingSpot(false)}});
+  vertices.insert({"G", {{18.0, 0.0, 0}, IsHoldingSpot(false)}});
+  vertices.insert({"H", {{21.0, 0.0, 0}, IsHoldingSpot(false)}});
+  vertices.insert({"I", {{24.0, 0.0, 0}, IsHoldingSpot(false)}});
+  vertices.insert({"J", {{27.0, 0.0, 0}, IsHoldingSpot(false)}});
 
   std::string vtxs = "ABCDEFGHIJ";
   for (char& v_source : vtxs)

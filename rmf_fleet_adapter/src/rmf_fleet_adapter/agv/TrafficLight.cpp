@@ -203,7 +203,7 @@ void TrafficLight::UpdateHandle::Implementation::Data::update_path(
   for (std::size_t i=0; i < new_path.size(); ++i)
   {
     const auto& wp = new_path[i];
-    graph.add_waypoint(wp.map_name(), wp.position().block<2,1>(0,0))
+    graph.add_waypoint(wp.map_name(), wp.position())
         .set_passthrough_point(!wp.yield())
         .set_holding_point(wp.yield());
 
@@ -609,7 +609,7 @@ TrafficLight::UpdateHandle::Implementation::Data::update_timing(
         // stopping, we should try to calculate the time that the robot is
         // expected to pass over it.
         const auto p = graph.get_waypoint(k).get_location();
-        const auto t = interpolate_time(traits, plan_waypoints[i-1], wp, p);
+        const auto t = interpolate_time(traits, plan_waypoints[i-1], wp, p.block<2, 1>(0, 0));
         arrival_timing[k] = t;
         departure_timing[k] = rmf_traffic_ros2::convert(t);
         plan_index[k] = i;
@@ -774,8 +774,11 @@ TrafficLight::UpdateHandle::Implementation::Data::estimate_location() const
       const auto p = motion->compute_position(effective_time);
       start.orientation(p[2]);
 
-      if (traversing_lane)
-        start.location(Eigen::Vector2d(p.block<2,1>(0,0)));
+      if (traversing_lane) {
+        Eigen::Vector3d pos;
+        pos << p[0], p[1], 0;
+        start.location(pos);
+      }
     }
   }
 

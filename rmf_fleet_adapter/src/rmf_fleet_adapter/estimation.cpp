@@ -130,7 +130,7 @@ void estimate_midlane_state(
     // Let's see if the current position is reasonably between the last known
     // waypoint and the target waypoint.
     const auto& base_wp = info.graph->get_waypoint(*info.last_known_wp);
-    const Eigen::Vector2d p0 = base_wp.get_location();
+    const Eigen::Vector2d p0 = base_wp.get_location().block<2,1>(0,0);
     const Eigen::Vector2d p1 = target_wp.position().block<2,1>(0,0);
     const Eigen::Vector2d p_location{l.x, l.y};
 
@@ -217,7 +217,7 @@ void estimate_state(
   if (info.last_known_wp)
   {
     const auto& last_known_wp = info.graph->get_waypoint(*info.last_known_wp);
-    const Eigen::Vector2d p_last = last_known_wp.get_location();
+    const Eigen::Vector2d p_last = last_known_wp.get_location().block<2, 1>(0, 0);
     const Eigen::Vector2d p{l.x, l.y};
     const double dist = (p_last - p).norm();
     if (dist < 0.25)
@@ -272,7 +272,7 @@ void estimate_waypoint(
   for (std::size_t i=0; i < info.graph->num_waypoints(); ++i)
   {
     const auto& wp = info.graph->get_waypoint(i);
-    const Eigen::Vector2d p_wp = wp.get_location();
+    const Eigen::Vector2d p_wp = wp.get_location().block<2, 1>(0, 0);
     const double dist = (p - p_wp).norm();
     if (dist < nearest_dist)
     {

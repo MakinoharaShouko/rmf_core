@@ -432,10 +432,10 @@ std::vector<agv::Plan::Waypoint> reconstruct_waypoints(
   for (auto it = node_sequence.rbegin(); it != node_sequence.rend(); ++it)
   {
     const auto& n = *it;
-    const Eigen::Vector2d p = n->waypoint ?
-      graph.waypoints[*n->waypoint].get_location() :
+    const Eigen::Vector3d p = n->waypoint ?
+      const_cast<Eigen::Vector3d&>(graph.waypoints[*n->waypoint].get_location()) :
       n->route_from_parent.trajectory.back().position()
-      .template block<2, 1>(0, 0);
+      .template block<3, 1>(0, 0);
     const Time time{*n->route_from_parent.trajectory.finish_time()};
     waypoints.emplace_back(
       agv::Plan::Waypoint::Implementation::make(
@@ -475,7 +475,7 @@ struct EuclideanExpander
     std::size_t waypoint;
     double remaining_cost_estimate;
     double current_cost;
-    Eigen::Vector2d location;
+    Eigen::Vector3d location;
     NodePtr parent;
   };
 
@@ -493,7 +493,7 @@ struct EuclideanExpander
     const std::size_t final_waypoint;
   };
 
-  double estimate_remaining_cost(const Eigen::Vector2d& p)
+  double estimate_remaining_cost(const Eigen::Vector3d& p)
   {
     return (p_final - p).norm();
   }
@@ -507,7 +507,7 @@ struct EuclideanExpander
 
   void make_initial_nodes(const InitialNodeArgs& args, SearchQueue& queue)
   {
-    const Eigen::Vector2d location =
+    const Eigen::Vector3d location =
       context.graph.waypoints[args.waypoint].get_location();
 
     queue.emplace(std::make_shared<Node>(
@@ -557,8 +557,8 @@ struct EuclideanExpander
       return;
     }
 
-    const Eigen::Vector2d p_start = parent_node->location;
-    const Eigen::Vector2d p_exit =
+    const Eigen::Vector3d p_start = parent_node->location;
+    const Eigen::Vector3d p_exit =
       context.graph.waypoints[exit_waypoint_index].get_location();
 
     const double cost =
@@ -590,12 +590,12 @@ struct EuclideanExpander
 
 private:
   const Context& context;
-  Eigen::Vector2d p_final;
+  Eigen::Vector3d p_final;
   std::unordered_set<std::size_t> expanded;
 };
 
 //==============================================================================
-Eigen::Vector3d to_3d(const Eigen::Vector2d& p, const double w)
+Eigen::Vector3d to_3d(const Eigen::Vector3d& p, const double w)
 {
   return Eigen::Vector3d(p[0], p[1], w);
 }
@@ -820,7 +820,7 @@ struct DifferentialDriveExpander
         while (euclidean_node)
         {
           reverse_waypoints.push_back(euclidean_node->waypoint);
-          const Eigen::Vector2d p = euclidean_node->location;
+          const Eigen::Vector3d p = euclidean_node->location;
           positions.push_back({p[0], p[1], 0.0});
           euclidean_node = euclidean_node->parent;
         }
@@ -926,7 +926,7 @@ struct DifferentialDriveExpander
     const auto initial_time = start.time()
         + rmf_traffic::time::from_seconds(time_held);
 
-    const Eigen::Vector2d wp_location =
+    const Eigen::Vector3d wp_location =
       _context.graph.waypoints[initial_waypoint].get_location();
 
     const auto& initial_location = start.location();
@@ -944,7 +944,7 @@ struct DifferentialDriveExpander
         Eigen::Vector3d::Zero());
 
       const Eigen::Vector2d course =
-        (wp_location - *initial_location).normalized();
+        (wp_location - *initial_location).normalized().block<2, 1>(0, 0);
 
       const std::vector<double> orientations =
         _differential_constraint.get_orientations(course);
@@ -1124,11 +1124,11 @@ struct DifferentialDriveExpander
       Eigen::Vector3d location;
       if (start.location())
       {
-        location.block<2,1>(0,0) = *start.location();
+        location = *start.location();
       }
       else
       {
-        location.block<2,1>(0,0) = wp.get_location();
+        location = wp.get_location();
       }
       location[2] = start.orientation();
 
@@ -1276,7 +1276,7 @@ struct DifferentialDriveExpander
   }
 
   bool is_orientation_okay(
-    const Eigen::Vector2d& initial_p,
+    const Eigen::Vector3d& initial_p,
     const double orientation,
     const Eigen::Vector2d& course,
     const agv::Graph::Lane& lane) const
@@ -1309,13 +1309,13 @@ struct DifferentialDriveExpander
 
     const agv::Graph::Waypoint& initial_waypoint =
       _context.graph.waypoints[lane.entry().waypoint_index()];
-    const Eigen::Vector2d& initial_p = initial_waypoint.get_location();
+    const Eigen::Vector3d& initial_p = initial_waypoint.get_location();
 
     const agv::Graph::Waypoint& next_waypoint =
       _context.graph.waypoints[lane.exit().waypoint_index()];
-    const Eigen::Vector2d& next_p = next_waypoint.get_location();
+    const Eigen::Vector3d& next_p = next_waypoint.get_location();
 
-    const Eigen::Vector2d course = (next_p - initial_p).normalized();
+    const Eigen::Vector2d course = (next_p - initial_p).normalized().block<2, 1>(0, 0);
 
     const std::vector<double> orientations =
       _differential_constraint.get_orientations(course);
@@ -1407,7 +1407,7 @@ struct DifferentialDriveExpander
     const std::size_t initial_waypoint = *initial_parent->waypoint;
     assert(_context.graph.lanes[initial_lane_index].entry().waypoint_index()
       == initial_waypoint);
-    const Eigen::Vector2d initial_p =
+    const Eigen::Vector3d initial_p =
       _context.graph.waypoints[initial_waypoint].get_location();
     const double orientation = initial_parent->orientation;
 
@@ -1446,7 +1446,7 @@ struct DifferentialDriveExpander
       const agv::Graph::Waypoint& exit_waypoint =
         _context.graph.waypoints[exit_waypoint_index];
 
-      const Eigen::Vector2d& next_p = exit_waypoint.get_location();
+      const Eigen::Vector3d& next_p = exit_waypoint.get_location();
       const Eigen::Vector3d next_position{next_p[0], next_p[1], orientation};
 
       // TODO(MXG): Figure out what to do if the trajectory spans across
@@ -1547,11 +1547,11 @@ struct DifferentialDriveExpander
       {
         const agv::Graph::Lane& future_lane = _context.graph.lanes[l];
 
-        const Eigen::Vector2d future_p =
+        const Eigen::Vector3d future_p =
           _context.graph.waypoints[future_lane.exit().waypoint_index()]
           .get_location();
 
-        const Eigen::Vector2d course = future_p - initial_p;
+        const Eigen::Vector2d course = (future_p - initial_p).block<2, 1>(0, 0);
 
         const bool check_orientation =
           is_orientation_okay(initial_p, orientation, course, future_lane);

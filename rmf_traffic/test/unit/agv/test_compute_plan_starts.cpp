@@ -36,9 +36,9 @@ SCENARIO("Test computing Starts from coordinates")
   WHEN("Location is on a waypoint, that is part of both a unidirectional and "
     "bidirectional lane")
   {
-    graph.add_waypoint(test_map_name, {0, 0}); // 0
-    graph.add_waypoint(test_map_name, {0.05, 0.05}); // 1
-    graph.add_waypoint(test_map_name, {10, 10}); // 2
+    graph.add_waypoint(test_map_name, {0, 0, 0}); // 0
+    graph.add_waypoint(test_map_name, {0.05, 0.05, 0}); // 1
+    graph.add_waypoint(test_map_name, {10, 10, 0}); // 2
     REQUIRE(graph.num_waypoints() == 3);
 
     graph.add_lane(0, 1); // 0
@@ -68,9 +68,9 @@ SCENARIO("Test computing Starts from coordinates")
   WHEN("Location is near a waypoint, within the waypoint merging distance. "
     "Waypoint is part of both a unidirectional and a bidirectional lane.")
   {
-    graph.add_waypoint(test_map_name, {0, 0}); // 0
-    graph.add_waypoint(test_map_name, {0.1, 0.1}); // 1
-    graph.add_waypoint(test_map_name, {10, 10}); // 2
+    graph.add_waypoint(test_map_name, {0, 0, 0}); // 0
+    graph.add_waypoint(test_map_name, {0.1, 0.1, 0}); // 1
+    graph.add_waypoint(test_map_name, {10, 10, 0}); // 2
     REQUIRE(graph.num_waypoints() == 3);
 
     graph.add_lane(0, 1); // 0
@@ -151,9 +151,9 @@ SCENARIO("Test computing Starts from coordinates")
   WHEN("Location is right on the border of merging to a waypoint, that is "
     "connected to both a unidirectional and bidirectional lane.")
   {
-    graph.add_waypoint(test_map_name, {0, 0}); // 0
-    graph.add_waypoint(test_map_name, {0.1, 0.1}); // 1
-    graph.add_waypoint(test_map_name, {10, 10}); // 2
+    graph.add_waypoint(test_map_name, {0, 0, 0}); // 0
+    graph.add_waypoint(test_map_name, {0.1, 0.1, 0}); // 1
+    graph.add_waypoint(test_map_name, {10, 10, 0}); // 2
     REQUIRE(graph.num_waypoints() == 3);
 
     graph.add_lane(0, 1); // 0
@@ -235,12 +235,12 @@ SCENARIO("Test computing Starts from coordinates")
     "Waypoints are either connected to both unidirectional and bidirectional "
     "lanes.")
   {
-    graph.add_waypoint(test_map_name, {0, 0}); // 0
-    graph.add_waypoint(test_map_name, {0.01, 0.01}); // 1
-    graph.add_waypoint(test_map_name, {-0.01, -0.01}); // 2
-    graph.add_waypoint(test_map_name, {0.01, -0.01}); // 3
-    graph.add_waypoint(test_map_name, {-0.01, 0.01}); // 4
-    graph.add_waypoint(test_map_name, {10, 10}); // 5
+    graph.add_waypoint(test_map_name, {0, 0, 0}); // 0
+    graph.add_waypoint(test_map_name, {0.01, 0.01, 0}); // 1
+    graph.add_waypoint(test_map_name, {-0.01, -0.01, 0}); // 2
+    graph.add_waypoint(test_map_name, {0.01, -0.01, 0}); // 3
+    graph.add_waypoint(test_map_name, {-0.01, 0.01, 0}); // 4
+    graph.add_waypoint(test_map_name, {10, 10, 0}); // 5
     REQUIRE(graph.num_waypoints() == 6);
 
     graph.add_lane(0, 1); // 0
@@ -278,9 +278,9 @@ SCENARIO("Test computing Starts from coordinates")
     "merging distance. Waypoints are connected to both unidirectional or "
     "bidirectional lanes.")
   {
-    graph.add_waypoint(test_map_name, {0, 0}); // 0
-    graph.add_waypoint(test_map_name, {1, 0}); // 1
-    graph.add_waypoint(test_map_name, {10.0, 0}); // 2
+    graph.add_waypoint(test_map_name, {0, 0, 0}); // 0
+    graph.add_waypoint(test_map_name, {1, 0, 0}); // 1
+    graph.add_waypoint(test_map_name, {10.0, 0, 0}); // 2
     REQUIRE(graph.num_waypoints() == 3);
 
     graph.add_lane(0, 1); // 0
@@ -386,9 +386,9 @@ SCENARIO("Test computing Starts from coordinates")
     "distance. Waypoint is connected to both unidirectional and bidirectional"
     " lanes.")
   {
-    graph.add_waypoint(test_map_name, {0, 0}); // 0
-    graph.add_waypoint(test_map_name, {1, 0}); // 1
-    graph.add_waypoint(test_map_name, {10.0, 0}); // 2
+    graph.add_waypoint(test_map_name, {0, 0, 0}); // 0
+    graph.add_waypoint(test_map_name, {1, 0, 0}); // 1
+    graph.add_waypoint(test_map_name, {10.0, 0, 0}); // 2
     REQUIRE(graph.num_waypoints() == 3);
 
     graph.add_lane(0, 1); // 0
@@ -491,9 +491,9 @@ SCENARIO("Test computing Starts from coordinates")
 
   WHEN("Location is on unidirectional lane")
   {
-    graph.add_waypoint(test_map_name, {0, 0}); // 0
-    graph.add_waypoint(test_map_name, {0.5, 0.5}); // 1
-    graph.add_waypoint(test_map_name, {10.0, 10.0}); // 2
+    graph.add_waypoint(test_map_name, {0, 0, 0}); // 0
+    graph.add_waypoint(test_map_name, {0.5, 0.5, 0}); // 1
+    graph.add_waypoint(test_map_name, {10.0, 10.0, 0}); // 2
     REQUIRE(graph.num_waypoints() == 3);
 
     graph.add_lane(0, 1); // 0
@@ -521,9 +521,9 @@ SCENARIO("Test computing Starts from coordinates")
 
   WHEN("Location is on bidirectional lane")
   {
-    graph.add_waypoint(test_map_name, {0, 0}); // 0
-    graph.add_waypoint(test_map_name, {0.5, 0.5}); // 1
-    graph.add_waypoint(test_map_name, {10.0, 10.0}); // 2
+    graph.add_waypoint(test_map_name, {0, 0, 0}); // 0
+    graph.add_waypoint(test_map_name, {0.5, 0.5, 0}); // 1
+    graph.add_waypoint(test_map_name, {10.0, 10.0, 0}); // 2
     REQUIRE(graph.num_waypoints() == 3);
 
     graph.add_lane(0, 1); // 0
@@ -568,9 +568,9 @@ SCENARIO("Test computing Starts from coordinates")
   WHEN("Location is not within merging with waypoints, within lane merging, "
     "between unidirectional lane entry and exit.")
   {
-    graph.add_waypoint(test_map_name, {0, 0}); // 0
-    graph.add_waypoint(test_map_name, {1, 0}); // 1
-    graph.add_waypoint(test_map_name, {10, 0}); // 2
+    graph.add_waypoint(test_map_name, {0, 0, 0}); // 0
+    graph.add_waypoint(test_map_name, {1, 0, 0}); // 1
+    graph.add_waypoint(test_map_name, {10, 0, 0}); // 2
     REQUIRE(graph.num_waypoints() == 3);
 
     graph.add_lane(0, 1); // 0
@@ -655,9 +655,9 @@ SCENARIO("Test computing Starts from coordinates")
   WHEN("Location is not within merging with waypoints, within lane merging, "
     "between bidirectional lane entry and exit.")
   {
-    graph.add_waypoint(test_map_name, {0, 0}); // 0
-    graph.add_waypoint(test_map_name, {1, 0}); // 1
-    graph.add_waypoint(test_map_name, {10, 0}); // 2
+    graph.add_waypoint(test_map_name, {0, 0, 0}); // 0
+    graph.add_waypoint(test_map_name, {1, 0, 0}); // 1
+    graph.add_waypoint(test_map_name, {10, 0, 0}); // 2
     REQUIRE(graph.num_waypoints() == 3);
 
     graph.add_lane(0, 1); // 0
@@ -802,10 +802,10 @@ SCENARIO("Test computing Starts from coordinates")
   WHEN("Location is on the cross section of 2 unidirectional lanes, within "
     "lane merging for both lanes")
   {
-    graph.add_waypoint(test_map_name, {-10, 0}); // 0
-    graph.add_waypoint(test_map_name, {10, 0}); // 1
-    graph.add_waypoint(test_map_name, {0, 10}); // 2
-    graph.add_waypoint(test_map_name, {0, -10}); // 3
+    graph.add_waypoint(test_map_name, {-10, 0, 0}); // 0
+    graph.add_waypoint(test_map_name, {10, 0, 0}); // 1
+    graph.add_waypoint(test_map_name, {0, 10, 0}); // 2
+    graph.add_waypoint(test_map_name, {0, -10, 0}); // 3
     REQUIRE(graph.num_waypoints() == 4);
 
     graph.add_lane(0, 1); // 0
@@ -851,10 +851,10 @@ SCENARIO("Test computing Starts from coordinates")
   WHEN("Location is on the cross section of a unidirectional lane, and a "
     "bidirectional lane, within lane merging for both lanes")
   {
-    graph.add_waypoint(test_map_name, {-10, 0}); // 0
-    graph.add_waypoint(test_map_name, {10, 0}); // 1
-    graph.add_waypoint(test_map_name, {0, 10}); // 2
-    graph.add_waypoint(test_map_name, {0, -10}); // 3
+    graph.add_waypoint(test_map_name, {-10, 0, 0}); // 0
+    graph.add_waypoint(test_map_name, {10, 0, 0}); // 1
+    graph.add_waypoint(test_map_name, {0, 10, 0}); // 2
+    graph.add_waypoint(test_map_name, {0, -10, 0}); // 3
     REQUIRE(graph.num_waypoints() == 4);
 
     graph.add_lane(0, 1); // 0
@@ -903,10 +903,10 @@ SCENARIO("Test computing Starts from coordinates")
   WHEN("Location is on the cross section of 2 bidirectional lanes, within lane "
     "merging for both lanes")
   {
-    graph.add_waypoint(test_map_name, {-10, 0}); // 0
-    graph.add_waypoint(test_map_name, {10, 0}); // 1
-    graph.add_waypoint(test_map_name, {0, 10}); // 2
-    graph.add_waypoint(test_map_name, {0, -10}); // 3
+    graph.add_waypoint(test_map_name, {-10, 0, 0}); // 0
+    graph.add_waypoint(test_map_name, {10, 0, 0}); // 1
+    graph.add_waypoint(test_map_name, {0, 10, 0}); // 2
+    graph.add_waypoint(test_map_name, {0, -10, 0}); // 3
     REQUIRE(graph.num_waypoints() == 4);
 
     graph.add_lane(0, 1); // 0
@@ -958,9 +958,9 @@ SCENARIO("Test computing Starts from coordinates")
   WHEN("Location is near an elbow cross section of 2 unidirectional lanes, "
     "within lane merging for both lanes, lanes moving away from elbow")
   {
-    graph.add_waypoint(test_map_name, {0, 0}); // 0
-    graph.add_waypoint(test_map_name, {5, 0}); // 1
-    graph.add_waypoint(test_map_name, {5, 2 * max_lane_merging_distance}); // 2
+    graph.add_waypoint(test_map_name, {0, 0, 0}); // 0
+    graph.add_waypoint(test_map_name, {5, 0, 0}); // 1
+    graph.add_waypoint(test_map_name, {5, 2 * max_lane_merging_distance, 0}); // 2
     REQUIRE(graph.num_waypoints() == 3);
 
     graph.add_lane(0, 1); // 0
@@ -1004,9 +1004,9 @@ SCENARIO("Test computing Starts from coordinates")
   WHEN("Location is near an elbow cross section of 2 unidirectional lanes, "
     "within lane merging for both lanes, lanes moving towards the elbow")
   {
-    graph.add_waypoint(test_map_name, {0, 0}); // 0
-    graph.add_waypoint(test_map_name, {5, 0}); // 1
-    graph.add_waypoint(test_map_name, {5, 2 * max_lane_merging_distance}); // 2
+    graph.add_waypoint(test_map_name, {0, 0, 0}); // 0
+    graph.add_waypoint(test_map_name, {5, 0, 0}); // 1
+    graph.add_waypoint(test_map_name, {5, 2 * max_lane_merging_distance, 0}); // 2
     REQUIRE(graph.num_waypoints() == 3);
 
     graph.add_lane(1, 0); // 0
@@ -1044,9 +1044,9 @@ SCENARIO("Test computing Starts from coordinates")
     "within lane merging for both lanes, one lane moving away from the elbow "
     "the other towards the elbow")
   {
-    graph.add_waypoint(test_map_name, {0, 0}); // 0
-    graph.add_waypoint(test_map_name, {5, 0}); // 1
-    graph.add_waypoint(test_map_name, {5, 2 * max_lane_merging_distance}); // 2
+    graph.add_waypoint(test_map_name, {0, 0, 0}); // 0
+    graph.add_waypoint(test_map_name, {5, 0, 0}); // 1
+    graph.add_waypoint(test_map_name, {5, 2 * max_lane_merging_distance, 0}); // 2
     REQUIRE(graph.num_waypoints() == 3);
 
     graph.add_lane(1, 0); // 0
@@ -1091,9 +1091,9 @@ SCENARIO("Test computing Starts from coordinates")
     "towards the elbow, and one bidirectional lane, within lane merging for "
     "both lanes")
   {
-    graph.add_waypoint(test_map_name, {0, 0}); // 0
-    graph.add_waypoint(test_map_name, {5, 0}); // 1
-    graph.add_waypoint(test_map_name, {5, 2 * max_lane_merging_distance}); // 2
+    graph.add_waypoint(test_map_name, {0, 0, 0}); // 0
+    graph.add_waypoint(test_map_name, {5, 0, 0}); // 1
+    graph.add_waypoint(test_map_name, {5, 2 * max_lane_merging_distance, 0}); // 2
     REQUIRE(graph.num_waypoints() == 3);
 
     graph.add_lane(1, 0); // 0
@@ -1135,9 +1135,9 @@ SCENARIO("Test computing Starts from coordinates")
   WHEN("Location is near an elbow cross section of two bidirectional lanes, "
     "within lane merging for both lanes")
   {
-    graph.add_waypoint(test_map_name, {0, 0}); // 0
-    graph.add_waypoint(test_map_name, {5, 0}); // 1
-    graph.add_waypoint(test_map_name, {5, 2 * max_lane_merging_distance}); // 2
+    graph.add_waypoint(test_map_name, {0, 0, 0}); // 0
+    graph.add_waypoint(test_map_name, {5, 0, 0}); // 1
+    graph.add_waypoint(test_map_name, {5, 2 * max_lane_merging_distance, 0}); // 2
     REQUIRE(graph.num_waypoints() == 3);
 
     graph.add_lane(1, 0); // 0
@@ -1182,10 +1182,10 @@ SCENARIO("Test computing Starts from coordinates")
 
   WHEN("Location is neither within waypoint merging nor lane merging")
   {
-    graph.add_waypoint(test_map_name, {-10, 0}); // 0
-    graph.add_waypoint(test_map_name, {10, 0}); // 1
-    graph.add_waypoint(test_map_name, {0, 10}); // 2
-    graph.add_waypoint(test_map_name, {0, -10}); // 3
+    graph.add_waypoint(test_map_name, {-10, 0, 0}); // 0
+    graph.add_waypoint(test_map_name, {10, 0, 0}); // 1
+    graph.add_waypoint(test_map_name, {0, 10, 0}); // 2
+    graph.add_waypoint(test_map_name, {0, -10, 0}); // 3
     REQUIRE(graph.num_waypoints() == 4);
 
     graph.add_lane(0, 1); // 0

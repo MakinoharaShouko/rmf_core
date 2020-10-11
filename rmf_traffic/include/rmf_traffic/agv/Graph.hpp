@@ -47,10 +47,10 @@ public:
     Waypoint& set_map_name(std::string map);
 
     /// Get the position of this Waypoint
-    const Eigen::Vector2d& get_location() const;
+    const Eigen::Vector3d& get_location() const;
 
     /// Set the position of this Waypoint
-    Waypoint& set_location(Eigen::Vector2d location);
+    Waypoint& set_location(Eigen::Vector3d location);
 
     /// Returns true if this Waypoint can be used as a holding point for the
     /// vehicle, otherwise returns false.
@@ -421,7 +421,7 @@ public:
   /// \note Waypoints cannot be erased from a Graph after they are created.
   Waypoint& add_waypoint(
     std::string map_name,
-    Eigen::Vector2d location);
+    Eigen::Vector3d location);
 
   /// Get a waypoint based on its index.
   Waypoint& get_waypoint(std::size_t index);

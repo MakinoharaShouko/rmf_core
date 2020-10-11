@@ -160,15 +160,17 @@ rmf_traffic::Trajectory test_with_obstacle(
   const Eigen::Vector2d initial_position = [&]() -> Eigen::Vector2d
     {
       if (original_result->get_start().location())
-        return *original_result->get_start().location();
+        return (*original_result->get_start().location())
+        .block<2, 1>(0, 0);
 
       const std::size_t start_index = original_result->get_start().waypoint();
-      return graph.get_waypoint(start_index).get_location();
+      return graph.get_waypoint(start_index).get_location()
+      .block<2, 1>(0, 0);
     } ();
 
 
   const std::size_t goal_index = original_result.get_goal().waypoint();
-  const auto goal_position = graph.get_waypoint(goal_index).get_location();
+  const auto goal_position = graph.get_waypoint(goal_index).get_location().block<2, 1>(0, 0);
 
   const Eigen::Vector2d p_initial =
     t_obs.front().position().block<2, 1>(0, 0);
@@ -369,7 +371,7 @@ SCENARIO("Test Configuration", "[config]")
 
   const std::string test_map_name = "test_map";
   Graph graph;
-  graph.add_waypoint(test_map_name, {0, -5}); // 0
+  graph.add_waypoint(test_map_name, {0, -5, 0}); // 0
   REQUIRE(graph.num_waypoints() == 1);
 
   const VehicleTraits traits(
@@ -391,11 +393,11 @@ SCENARIO("Test Configuration", "[config]")
   WHEN("Set the graph")
   {
     Graph& graph_ = config.graph();
-    graph_.add_waypoint(test_map_name, {5, 5});
+    graph_.add_waypoint(test_map_name, {5, 5, 0});
     REQUIRE(graph_.num_waypoints() == graph.num_waypoints() + 1);
     REQUIRE(config.graph().num_waypoints() == graph.num_waypoints() + 1);
     CHECK((config.graph().get_waypoint(graph.num_waypoints()).get_location()
-      - Eigen::Vector2d{5, 5}).norm() == Approx(0).margin(1e-6));
+      - Eigen::Vector3d{5, 5, 0}).norm() == Approx(0).margin(1e-6));
   }
 
   WHEN("Get the vechile_traits")
@@ -502,19 +504,19 @@ SCENARIO("Maximum Cost Estimates", "[maximum_cost_estimate]")
   {
     const std::string test_map_name = "test_map";
     rmf_traffic::agv::Graph graph;
-    graph.add_waypoint(test_map_name, {-5, -5}).set_passthrough_point(true); // 0
-    graph.add_waypoint(test_map_name, { 0, -5}).set_passthrough_point(true); // 1
-    graph.add_waypoint(test_map_name, { 5, -5}).set_passthrough_point(true); // 2
-    graph.add_waypoint(test_map_name, {10, -5}).set_passthrough_point(true); // 3
-    graph.add_waypoint(test_map_name, {-5, 0}); // 4
-    graph.add_waypoint(test_map_name, { 0, 0}); // 5
-    graph.add_waypoint(test_map_name, { 5, 0}); // 6
-    graph.add_waypoint(test_map_name, {10, 0}).set_passthrough_point(true); // 7
-    graph.add_waypoint(test_map_name, {10, 4}).set_passthrough_point(true); // 8
-    graph.add_waypoint(test_map_name, { 0, 8}).set_passthrough_point(true); // 9
-    graph.add_waypoint(test_map_name, { 5, 8}).set_passthrough_point(true); // 10
-    graph.add_waypoint(test_map_name, {10, 12}).set_passthrough_point(true); // 11
-    graph.add_waypoint(test_map_name, {12, 12}).set_passthrough_point(true); // 12
+    graph.add_waypoint(test_map_name, {-5, -5, 0}).set_passthrough_point(true); // 0
+    graph.add_waypoint(test_map_name, { 0, -5, 0}).set_passthrough_point(true); // 1
+    graph.add_waypoint(test_map_name, { 5, -5, 0}).set_passthrough_point(true); // 2
+    graph.add_waypoint(test_map_name, {10, -5, 0}).set_passthrough_point(true); // 3
+    graph.add_waypoint(test_map_name, {-5, 0, 0}); // 4
+    graph.add_waypoint(test_map_name, { 0, 0, 0}); // 5
+    graph.add_waypoint(test_map_name, { 5, 0, 0}); // 6
+    graph.add_waypoint(test_map_name, {10, 0, 0}).set_passthrough_point(true); // 7
+    graph.add_waypoint(test_map_name, {10, 4, 0}).set_passthrough_point(true); // 8
+    graph.add_waypoint(test_map_name, { 0, 8, 0}).set_passthrough_point(true); // 9
+    graph.add_waypoint(test_map_name, { 5, 8, 0}).set_passthrough_point(true); // 10
+    graph.add_waypoint(test_map_name, {10, 12, 0}).set_passthrough_point(true); // 11
+    graph.add_waypoint(test_map_name, {12, 12, 0}).set_passthrough_point(true); // 12
     CHECK(graph.num_waypoints() == 13);
 
     auto add_bidir_lane = [&](const std::size_t w0, const std::size_t w1)
@@ -635,7 +637,7 @@ SCENARIO("Test Start")
   CHECK(start.waypoint() == 1);
   CHECK((start.orientation() - 0.0) == Approx(0.0).margin(1e-6));
 
-  rmf_utils::optional<Eigen::Vector2d> initial_location = Eigen::Vector2d{0, 0};
+  rmf_utils::optional<Eigen::Vector3d> initial_location = Eigen::Vector3d{0, 0, 0};
   rmf_utils::optional<std::size_t> initial_lane = std::size_t(0);
 
   start.location(initial_location);
@@ -668,19 +670,19 @@ SCENARIO("Test planning")
 
   const std::string test_map_name = "test_map";
   rmf_traffic::agv::Graph graph;
-  graph.add_waypoint(test_map_name, {-5, -5}).set_passthrough_point(true); // 0
-  graph.add_waypoint(test_map_name, { 0, -5}).set_passthrough_point(true); // 1
-  graph.add_waypoint(test_map_name, { 5, -5}).set_passthrough_point(true); // 2
-  graph.add_waypoint(test_map_name, {10, -5}).set_passthrough_point(true); // 3
-  graph.add_waypoint(test_map_name, {-5, 0}); // 4
-  graph.add_waypoint(test_map_name, { 0, 0}); // 5
-  graph.add_waypoint(test_map_name, { 5, 0}); // 6
-  graph.add_waypoint(test_map_name, {10, 0}).set_passthrough_point(true); // 7
-  graph.add_waypoint(test_map_name, {10, 4}).set_passthrough_point(true); // 8
-  graph.add_waypoint(test_map_name, { 0, 8}).set_passthrough_point(true); // 9
-  graph.add_waypoint(test_map_name, { 5, 8}).set_passthrough_point(true); // 10
-  graph.add_waypoint(test_map_name, {10, 12}).set_passthrough_point(true); // 11
-  graph.add_waypoint(test_map_name, {12, 12}).set_passthrough_point(true); // 12
+  graph.add_waypoint(test_map_name, {-5, -5, 0}).set_passthrough_point(true); // 0
+  graph.add_waypoint(test_map_name, { 0, -5, 0}).set_passthrough_point(true); // 1
+  graph.add_waypoint(test_map_name, { 5, -5, 0}).set_passthrough_point(true); // 2
+  graph.add_waypoint(test_map_name, {10, -5, 0}).set_passthrough_point(true); // 3
+  graph.add_waypoint(test_map_name, {-5, 0, 0}); // 4
+  graph.add_waypoint(test_map_name, { 0, 0, 0}); // 5
+  graph.add_waypoint(test_map_name, { 5, 0, 0}); // 6
+  graph.add_waypoint(test_map_name, {10, 0, 0}).set_passthrough_point(true); // 7
+  graph.add_waypoint(test_map_name, {10, 4, 0}).set_passthrough_point(true); // 8
+  graph.add_waypoint(test_map_name, { 0, 8, 0}).set_passthrough_point(true); // 9
+  graph.add_waypoint(test_map_name, { 5, 8, 0}).set_passthrough_point(true); // 10
+  graph.add_waypoint(test_map_name, {10, 12, 0}).set_passthrough_point(true); // 11
+  graph.add_waypoint(test_map_name, {12, 12, 0}).set_passthrough_point(true); // 12
   REQUIRE(graph.num_waypoints() == 13);
 
   auto add_bidir_lane = [&](const std::size_t w0, const std::size_t w1)
@@ -1176,12 +1178,12 @@ SCENARIO("Test planning")
 
       const Eigen::Vector2d p_initial = t.front().position().block<2, 1>(0, 0);
       const Eigen::Vector2d p_initial_g =
-        graph.get_waypoint(start_index).get_location();
+        graph.get_waypoint(start_index).get_location().block<2, 1>(0, 0);
       CHECK( (p_initial - p_initial_g).norm() == Approx(0.0) );
 
       const Eigen::Vector2d p_final = t.back().position().block<2, 1>(0, 0);
       const Eigen::Vector2d p_final_g =
-        graph.get_waypoint(goal_index).get_location();
+        graph.get_waypoint(goal_index).get_location().block<2, 1>(0, 0);
       CHECK( (p_final - p_final_g).norm() == Approx(0.0) );
 
       WHEN("First obstacle is introduced")
@@ -1259,39 +1261,39 @@ SCENARIO("DP1 Graph")
   //initialize graph
   const std::string test_map_name = "test_map";
   rmf_traffic::agv::Graph graph;
-  graph.add_waypoint(test_map_name, {12, -12}).set_passthrough_point(true); // 0
-  graph.add_waypoint(test_map_name, {18, -12}).set_holding_point(true); // 1
-  graph.add_waypoint(test_map_name, {-10, -8}).set_passthrough_point(true); // 2
-  graph.add_waypoint(test_map_name, {-2, -8}).set_holding_point(true);  // 3
-  graph.add_waypoint(test_map_name, { 3, -8}).set_passthrough_point(true); // 4
-  graph.add_waypoint(test_map_name, {12, -8}).set_passthrough_point(true); // 5
-  graph.add_waypoint(test_map_name, {18, -8}).set_holding_point(true); // 6
-  graph.add_waypoint(test_map_name, {-15, -4}).set_holding_point(true); // 7
-  graph.add_waypoint(test_map_name, {-10, -4}).set_passthrough_point(true); // 8
-  graph.add_waypoint(test_map_name, { -2, -4}).set_holding_point(true); // 9
-  graph.add_waypoint(test_map_name, { 3, -4}).set_passthrough_point(true); // 10
-  graph.add_waypoint(test_map_name, {6, -4}).set_passthrough_point(true); // 11
-  graph.add_waypoint(test_map_name, {9, -4}).set_passthrough_point(true); // 12
-  graph.add_waypoint(test_map_name, {-15, 0}).set_passthrough_point(true); // 13
-  graph.add_waypoint(test_map_name, {-10, 0}).set_passthrough_point(true); // 14
-  graph.add_waypoint(test_map_name, { 0, 0}).set_passthrough_point(true); // 15 DOOR (not implemented)
-  graph.add_waypoint(test_map_name, { 3, 0}).set_passthrough_point(true); // 16
-  graph.add_waypoint(test_map_name, {6, 0}).set_passthrough_point(true); // 17
-  graph.add_waypoint(test_map_name, {9, 0}).set_passthrough_point(true); // 18
-  graph.add_waypoint(test_map_name, {15, 0}).set_holding_point(true);   // 19
-  graph.add_waypoint(test_map_name, {18, 0}).set_holding_point(true);   // 20
-  graph.add_waypoint(test_map_name, { -2, 4}).set_holding_point(true);  // 21
-  graph.add_waypoint(test_map_name, { 3, 4}).set_passthrough_point(true); // 22
-  graph.add_waypoint(test_map_name, {6, 4}).set_passthrough_point(true); // 23
-  graph.add_waypoint(test_map_name, {9, 4}).set_passthrough_point(true); // 24
-  graph.add_waypoint(test_map_name, {15, 4}).set_passthrough_point(true); // 25
-  graph.add_waypoint(test_map_name, {18, 4}).set_passthrough_point(true); // 26
-  graph.add_waypoint(test_map_name, { -15, 8}).set_holding_point(true); // 27
-  graph.add_waypoint(test_map_name, {-10, 8}).set_holding_point(true);  // 28
-  graph.add_waypoint(test_map_name, {3, 8}).set_holding_point(true);    // 29
-  graph.add_waypoint(test_map_name, {6, 8}).set_holding_point(true);    // 30
-  graph.add_waypoint(test_map_name, {15, 8}).set_holding_point(true);  // 31
-  graph.add_waypoint(test_map_name, {18, 8}).set_holding_point(true);  // 32
+  graph.add_waypoint(test_map_name, {12, -12, 0}).set_passthrough_point(true); // 0
+  graph.add_waypoint(test_map_name, {18, -12, 0}).set_holding_point(true); // 1
+  graph.add_waypoint(test_map_name, {-10, -8, 0}).set_passthrough_point(true); // 2
+  graph.add_waypoint(test_map_name, {-2, -8, 0}).set_holding_point(true);  // 3
+  graph.add_waypoint(test_map_name, { 3, -8, 0}).set_passthrough_point(true); // 4
+  graph.add_waypoint(test_map_name, {12, -8, 0}).set_passthrough_point(true); // 5
+  graph.add_waypoint(test_map_name, {18, -8, 0}).set_holding_point(true); // 6
+  graph.add_waypoint(test_map_name, {-15, -4, 0}).set_holding_point(true); // 7
+  graph.add_waypoint(test_map_name, {-10, -4, 0}).set_passthrough_point(true); // 8
+  graph.add_waypoint(test_map_name, { -2, -4, 0}).set_holding_point(true); // 9
+  graph.add_waypoint(test_map_name, { 3, -4, 0}).set_passthrough_point(true); // 10
+  graph.add_waypoint(test_map_name, {6, -4, 0}).set_passthrough_point(true); // 11
+  graph.add_waypoint(test_map_name, {9, -4, 0}).set_passthrough_point(true); // 12
+  graph.add_waypoint(test_map_name, {-15, 0, 0}).set_passthrough_point(true); // 13
+  graph.add_waypoint(test_map_name, {-10, 0, 0}).set_passthrough_point(true); // 14
+  graph.add_waypoint(test_map_name, { 0, 0, 0}).set_passthrough_point(true); // 15 DOOR (not implemented)
+  graph.add_waypoint(test_map_name, { 3, 0, 0}).set_passthrough_point(true); // 16
+  graph.add_waypoint(test_map_name, {6, 0, 0}).set_passthrough_point(true); // 17
+  graph.add_waypoint(test_map_name, {9, 0, 0}).set_passthrough_point(true); // 18
+  graph.add_waypoint(test_map_name, {15, 0, 0}).set_holding_point(true);   // 19
+  graph.add_waypoint(test_map_name, {18, 0, 0}).set_holding_point(true);   // 20
+  graph.add_waypoint(test_map_name, { -2, 4, 0}).set_holding_point(true);  // 21
+  graph.add_waypoint(test_map_name, { 3, 4, 0}).set_passthrough_point(true); // 22
+  graph.add_waypoint(test_map_name, {6, 4, 0}).set_passthrough_point(true); // 23
+  graph.add_waypoint(test_map_name, {9, 4, 0}).set_passthrough_point(true); // 24
+  graph.add_waypoint(test_map_name, {15, 4, 0}).set_passthrough_point(true); // 25
+  graph.add_waypoint(test_map_name, {18, 4, 0}).set_passthrough_point(true); // 26
+  graph.add_waypoint(test_map_name, { -15, 8, 0}).set_holding_point(true); // 27
+  graph.add_waypoint(test_map_name, {-10, 8, 0}).set_holding_point(true);  // 28
+  graph.add_waypoint(test_map_name, {3, 8, 0}).set_holding_point(true);    // 29
+  graph.add_waypoint(test_map_name, {6, 8, 0}).set_holding_point(true);    // 30
+  graph.add_waypoint(test_map_name, {15, 8, 0}).set_holding_point(true);  // 31
+  graph.add_waypoint(test_map_name, {18, 8, 0}).set_holding_point(true);  // 32
 
   REQUIRE(graph.num_waypoints() == 33);
 
@@ -1384,12 +1386,12 @@ SCENARIO("DP1 Graph")
 
     const Eigen::Vector2d p_initial = t.front().position().block<2, 1>(0, 0);
     const Eigen::Vector2d p_initial_g =
-      graph.get_waypoint(start_index).get_location();
+      graph.get_waypoint(start_index).get_location().block<2, 1>(0, 0);
     CHECK( (p_initial - p_initial_g).norm() == Approx(0.0));
 
     const Eigen::Vector2d p_final = t.back().position().block<2, 1>(0, 0);
     const Eigen::Vector2d p_final_g =
-      graph.get_waypoint(goal_index).get_location();
+      graph.get_waypoint(goal_index).get_location().block<2, 1>(0, 0);
     CHECK( (p_final - p_final_g).norm() == Approx(0.0) );
 
     WHEN("Obstacle 28->3 that partially overlaps in time")
@@ -1572,12 +1574,12 @@ SCENARIO("DP1 Graph")
 
     const Eigen::Vector2d p_initial = t.front().position().block<2, 1>(0, 0);
     const Eigen::Vector2d p_initial_g =
-      graph.get_waypoint(start_index).get_location();
+      graph.get_waypoint(start_index).get_location().block<2, 1>(0, 0);
     CHECK( (p_initial - p_initial_g).norm() == Approx(0.0) );
 
     const Eigen::Vector2d p_final = t.back().position().block<2, 1>(0, 0);
     const Eigen::Vector2d p_final_g =
-      graph.get_waypoint(goal_index).get_location();
+      graph.get_waypoint(goal_index).get_location().block<2, 1>(0, 0);
     CHECK( (p_final - p_final_g).norm() == Approx(0.0) );
 
     WHEN("Obstacle 28->3 that partially overlaps in time")
@@ -1757,12 +1759,12 @@ SCENARIO("DP1 Graph")
 
     const Eigen::Vector2d p_initial = t.front().position().block<2, 1>(0, 0);
     const Eigen::Vector2d p_initial_g =
-      graph.get_waypoint(start_index).get_location();
+      graph.get_waypoint(start_index).get_location().block<2, 1>(0, 0);
     CHECK( (p_initial - p_initial_g).norm() == Approx(0.0) );
 
     const Eigen::Vector2d p_final = t.back().position().block<2, 1>(0, 0);
     const Eigen::Vector2d p_final_g =
-      graph.get_waypoint(goal_index).get_location();
+      graph.get_waypoint(goal_index).get_location().block<2, 1>(0, 0);
     CHECK( (p_final - p_final_g).norm() == Approx(0.0) );
 
     rmf_traffic::Trajectory obstacle;
@@ -1809,12 +1811,12 @@ SCENARIO("DP1 Graph")
 
     const Eigen::Vector2d p_initial = t.front().position().block<2, 1>(0, 0);
     const Eigen::Vector2d p_initial_g =
-      graph.get_waypoint(start_index).get_location();
+      graph.get_waypoint(start_index).get_location().block<2, 1>(0, 0);
     CHECK( (p_initial - p_initial_g).norm() == Approx(0.0) );
 
     const Eigen::Vector2d p_final = t.back().position().block<2, 1>(0, 0);
     const Eigen::Vector2d p_final_g =
-      graph.get_waypoint(goal_index).get_location();
+      graph.get_waypoint(goal_index).get_location().block<2, 1>(0, 0);
     CHECK( (p_final - p_final_g).norm() == Approx(0.0) );
 
     rmf_traffic::Trajectory obstacle_1;
@@ -2044,11 +2046,11 @@ SCENARIO("Graph with door", "[door]")
 
   const std::string test_map_name = "test_map";
   Graph graph;
-  graph.add_waypoint(test_map_name, {  0, 0}); // 0
-  graph.add_waypoint(test_map_name, {  0, 0}); // 1
-  graph.add_waypoint(test_map_name, {  0, 0}); // 2
-  graph.add_waypoint(test_map_name, {  5, 0}); // 3
-  graph.add_waypoint(test_map_name, { 10, 0}); // 4
+  graph.add_waypoint(test_map_name, {  0, 0, 0}); // 0
+  graph.add_waypoint(test_map_name, {  0, 0, 0}); // 1
+  graph.add_waypoint(test_map_name, {  0, 0, 0}); // 2
+  graph.add_waypoint(test_map_name, {  5, 0, 0}); // 3
+  graph.add_waypoint(test_map_name, { 10, 0, 0}); // 4
   CHECK(graph.num_waypoints() == 5);
 
   graph.add_lane(0, 3);
@@ -2121,11 +2123,11 @@ SCENARIO("Test planner with various start conditions")
 
   const std::string test_map_name = "test_map";
   Graph graph;
-  graph.add_waypoint(test_map_name, {0, -5}); // 0
-  graph.add_waypoint(test_map_name, {-5, 0}); // 1
-  graph.add_waypoint(test_map_name, {0, 0}); // 2
-  graph.add_waypoint(test_map_name, {5, 0}); // 3
-  graph.add_waypoint(test_map_name, {0, 5}); // 4
+  graph.add_waypoint(test_map_name, {0, -5, 0}); // 0
+  graph.add_waypoint(test_map_name, {-5, 0, 0}); // 1
+  graph.add_waypoint(test_map_name, {0, 0, 0}); // 2
+  graph.add_waypoint(test_map_name, {5, 0, 0}); // 3
+  graph.add_waypoint(test_map_name, {0, 5, 0}); // 4
   REQUIRE(graph.num_waypoints() == 5);
 
   graph.add_lane(0, 2); // 0
@@ -2175,8 +2177,8 @@ SCENARIO("Test planner with various start conditions")
     graph.add_lane(2, 1); // 7
     planner = Planner{Planner::Configuration{graph, traits}, default_options};
 
-    rmf_utils::optional<Eigen::Vector2d> initial_location =
-      Eigen::Vector2d{-5.0, 0};
+    rmf_utils::optional<Eigen::Vector3d> initial_location =
+      Eigen::Vector3d{-5.0, 0, 0};
 
     Planner::Start start1 = Planner::Start{
       initial_time,
@@ -2223,8 +2225,8 @@ SCENARIO("Test planner with various start conditions")
     graph.add_lane(2, 1); // 7
     planner = Planner{Planner::Configuration{graph, traits}, default_options};
 
-    rmf_utils::optional<Eigen::Vector2d> initial_location =
-      Eigen::Vector2d{-2.5, 0};
+    rmf_utils::optional<Eigen::Vector3d> initial_location =
+      Eigen::Vector3d{-2.5, 0, 0};
 
     Planner::Start start = Planner::Start{
       initial_time,
@@ -2282,8 +2284,8 @@ SCENARIO("Test planner with various start conditions")
   {
 
     Planner::Goal goal{3};
-    rmf_utils::optional<Eigen::Vector2d> initial_location =
-      Eigen::Vector2d{-2.5, 0};
+    rmf_utils::optional<Eigen::Vector3d> initial_location =
+      Eigen::Vector3d{-2.5, 0, 0};
 
     WHEN("initial_lane is not constrained")
     {
@@ -2318,8 +2320,8 @@ SCENARIO("Test planner with various start conditions")
     graph.add_lane(2, 1); // 7
     planner = Planner{Planner::Configuration{graph, traits}, default_options};
 
-    rmf_utils::optional<Eigen::Vector2d> initial_location =
-      Eigen::Vector2d{-4.99, 0};
+    rmf_utils::optional<Eigen::Vector3d> initial_location =
+      Eigen::Vector3d{-4.99, 0, 0};
     rmf_utils::optional<std::size_t> initial_lane = 6;
 
     Planner::Start start = Planner::Start{
@@ -2412,7 +2414,7 @@ SCENARIO("Test planner with various start conditions")
     graph.add_lane(2, 1); // 7
     planner = Planner{Planner::Configuration{graph, traits}, default_options};
 
-    rmf_utils::optional<Eigen::Vector2d> location = Eigen::Vector2d{-2.5, 0};
+    rmf_utils::optional<Eigen::Vector3d> location = Eigen::Vector3d{-2.5, 0, 0};
     std::vector<Planner::Start> starts;
     Planner::Start start1{initial_time, 1, 0.0, location};
     Planner::Start start2{initial_time, 2, 0.0, location};
@@ -2447,7 +2449,7 @@ SCENARIO("Test planner with various start conditions")
     graph.add_lane(2, 1); // 7
     planner = Planner{Planner::Configuration{graph, traits}, default_options};
 
-    rmf_utils::optional<Eigen::Vector2d> location = Eigen::Vector2d{-2.5, 0};
+    rmf_utils::optional<Eigen::Vector3d> location = Eigen::Vector3d{-2.5, 0, 0};
     rmf_utils::optional<std::size_t> initial_lane = 6;
 
     std::vector<Planner::Start> starts;
@@ -2488,11 +2490,11 @@ SCENARIO("Test starts using graph with non-colinear waypoints")
 
   const std::string test_map_name = "test_map";
   Graph graph;
-  graph.add_waypoint(test_map_name, {0, 0}); // 0
-  graph.add_waypoint(test_map_name, {-4, 3}); // 1
-  graph.add_waypoint(test_map_name, {4, 3}); // 2
-  graph.add_waypoint(test_map_name, {-4, 15}); // 3
-  graph.add_waypoint(test_map_name, {4, 15}); // 4
+  graph.add_waypoint(test_map_name, {0, 0, 0}); // 0
+  graph.add_waypoint(test_map_name, {-4, 3, 0}); // 1
+  graph.add_waypoint(test_map_name, {4, 3, 0}); // 2
+  graph.add_waypoint(test_map_name, {-4, 15, 0}); // 3
+  graph.add_waypoint(test_map_name, {4, 15, 0}); // 4
   REQUIRE(graph.num_waypoints() == 5);
 
   graph.add_lane(0, 1); // 0
@@ -2542,8 +2544,8 @@ SCENARIO("Test starts using graph with non-colinear waypoints")
 
     // starts where robot has initial_locations displace from waypoint 1
     // Displaced 0.5m along lane 5
-    rmf_utils::optional<Eigen::Vector2d> start_location1 =
-      Eigen::Vector2d{-4, 3.5};
+    rmf_utils::optional<Eigen::Vector3d> start_location1 =
+      Eigen::Vector3d{-4, 3.5, 0};
 
     Planner::Start start3{initial_time, 1, -M_PI_2, start_location1};
     Planner::Start start4{initial_time, 1, -0.64, start_location1};
@@ -2588,8 +2590,8 @@ SCENARIO("Test starts using graph with non-colinear waypoints")
     const auto plan_duration =
       plan->get_itinerary().front().trajectory().duration();
     const auto start_position =
-      best_start.location() ? best_start.location().value() :
-      graph.get_waypoint(best_start.waypoint()).get_location();
+      best_start.location() ? best_start.location().value().block<2, 1>(0, 0) :
+      graph.get_waypoint(best_start.waypoint()).get_location().block<2, 1>(0, 0);
     CHECK_PLAN(
       plan,
       start_position,
@@ -2640,9 +2642,9 @@ SCENARIO("Multilevel Planning", "[debug]")
   GIVEN("Goal waypoint is the first waypoint on the second map")
   {
     Graph graph;
-    graph.add_waypoint(L1, {-5, 0}); // 0
-    graph.add_waypoint(L1, {0, 0}); // 1
-    graph.add_waypoint(L2, {0, -5}); // 2
+    graph.add_waypoint(L1, {-5, 0, 0}); // 0
+    graph.add_waypoint(L1, {0, 0, 0}); // 1
+    graph.add_waypoint(L2, {0, -5, 1}); // 2
     REQUIRE(graph.num_waypoints() == 3);
 
     graph.add_lane(0, 1); // 0
@@ -2667,10 +2669,10 @@ SCENARIO("Multilevel Planning", "[debug]")
   GIVEN("Goal waypoint is the second waypoint on the second map")
   {
     Graph graph;
-    graph.add_waypoint(L1, {-5, 0}); // 0
-    graph.add_waypoint(L1, {0, 0}); // 1
-    graph.add_waypoint(L2, {0, -5}); // 2
-    graph.add_waypoint(L2, {5, -5}); // 3
+    graph.add_waypoint(L1, {-5, 0, 0}); // 0
+    graph.add_waypoint(L1, {0, 0, 0}); // 1
+    graph.add_waypoint(L2, {0, -5, 1}); // 2
+    graph.add_waypoint(L2, {5, -5, 1}); // 3
     REQUIRE(graph.num_waypoints() == 4);
 
     graph.add_lane(0, 1); // 0
@@ -2698,12 +2700,12 @@ SCENARIO("Multilevel Planning", "[debug]")
   {
     // L1 -> L2 -> L3
     Graph graph;
-    graph.add_waypoint(L1, {-5, 0}); // 0
-    graph.add_waypoint(L1, {0, 0}); // 1
-    graph.add_waypoint(L2, {0, -5}); // 2
-    graph.add_waypoint(L2, {5, -5}); // 3
-    graph.add_waypoint(L3, {5, -10}); // 4
-    graph.add_waypoint(L3, {10, -10}); // 5
+    graph.add_waypoint(L1, {-5, 0, 0}); // 0
+    graph.add_waypoint(L1, {0, 0, 0}); // 1
+    graph.add_waypoint(L2, {0, -5, 1}); // 2
+    graph.add_waypoint(L2, {5, -5, 1}); // 3
+    graph.add_waypoint(L3, {5, -10, 2}); // 4
+    graph.add_waypoint(L3, {10, -10, 2}); // 5
     REQUIRE(graph.num_waypoints() == 6);
 
     graph.add_lane(0, 1); // 0
@@ -2734,23 +2736,23 @@ SCENARIO("Multilevel Planning", "[debug]")
   GIVEN("Graph with Lift")
   {
     Graph graph;
-    graph.add_waypoint(L1, {-5, 0}); // 0
-    graph.add_waypoint(L1, {0, 0}); // 1
+    graph.add_waypoint(L1, {-5, 0, 0}); // 0
+    graph.add_waypoint(L1, {0, 0, 0}); // 1
 
     WHEN("Perfect alignment")
     {
-      graph.add_waypoint(L2, {0, 0}); // 2
+      graph.add_waypoint(L2, {0, 0, 1}); // 2
     }
 
     WHEN("Broken alignment")
     {
-      graph.add_waypoint(L2, {1.0, 0}); // 2
+      graph.add_waypoint(L2, {1.0, 0, 1}); // 2
     }
 
-    const Eigen::Vector2d p = graph.get_waypoint(2).get_location();
-    graph.add_waypoint(L2, p + Eigen::Vector2d(0, 5)); // 3
+    const Eigen::Vector3d p = graph.get_waypoint(2).get_location();
+    graph.add_waypoint(L2, p + Eigen::Vector3d(0, 5, 1)); // 3
     graph.add_waypoint(L3, p); // 4
-    graph.add_waypoint(L3, {5, 5}); // 5
+    graph.add_waypoint(L3, {5, 5, 2}); // 5
     REQUIRE(graph.num_waypoints() == 6);
 
     // Enter the lift at L1
@@ -2816,11 +2818,11 @@ SCENARIO("Multilevel Planning", "[debug]")
   GIVEN("Graph with lift and door")
   {
     Graph graph;
-    graph.add_waypoint("L1", {-5, 0}); // 0
-    graph.add_waypoint("L1", {0, 0}); // 1
-    graph.add_waypoint("L2", {0, 0}); // 2
-    graph.add_waypoint("L2", {-5, 0}); // 3
-    graph.add_waypoint("L2", {-10, 0}); // 4
+    graph.add_waypoint("L1", {-5, 0, 0}); // 0
+    graph.add_waypoint("L1", {0, 0, 0}); // 1
+    graph.add_waypoint("L2", {0, 0, 1}); // 2
+    graph.add_waypoint("L2", {-5, 0, 1}); // 3
+    graph.add_waypoint("L2", {-10, 0, 1}); // 4
     REQUIRE(graph.num_waypoints() == 5);
 
     graph.add_lane(
@@ -2894,9 +2896,9 @@ SCENARIO("Adjacent entry and exit events")
   GIVEN("non-colinear waypoints")
   {
     Graph graph;
-    graph.add_waypoint("test_map", {-5, 0}); // 0
-    graph.add_waypoint("test_map", {0, 0}); // 1
-    graph.add_waypoint("test_map", {0, 5}); // 2
+    graph.add_waypoint("test_map", {-5, 0, 0}); // 0
+    graph.add_waypoint("test_map", {0, 0, 0}); // 1
+    graph.add_waypoint("test_map", {0, 5, 0}); // 2
     REQUIRE(graph.num_waypoints() == 3);
 
     graph.add_lane(
@@ -2934,9 +2936,9 @@ SCENARIO("Adjacent entry and exit events")
   GIVEN("colinear waypoints")
   {
     Graph graph;
-    graph.add_waypoint("test_map", {-5, 0}); // 0
-    graph.add_waypoint("test_map", {0, 0}); // 1
-    graph.add_waypoint("test_map", {5, 0}); // 2
+    graph.add_waypoint("test_map", {-5, 0, 0}); // 0
+    graph.add_waypoint("test_map", {0, 0, 0}); // 1
+    graph.add_waypoint("test_map", {5, 0, 0}); // 2
     REQUIRE(graph.num_waypoints() == 3);
 
     graph.add_lane(
@@ -3005,12 +3007,12 @@ SCENARIO("Close start", "[close_start]")
 
   const std::string test_map_name = "test_map";
   rmf_traffic::agv::Graph graph;
-  graph.add_waypoint(test_map_name, { 0.0, -5.0}); // 0
-  graph.add_waypoint(test_map_name, {-5.0, 0.0}); // 1
-  graph.add_waypoint(test_map_name, { 0.0, 0.0}); // 2
-  graph.add_waypoint(test_map_name, { 5.0,  0.0}); // 3
-  graph.add_waypoint(test_map_name, { 0.0, 5.0}); // 4
-  graph.add_waypoint(test_map_name, { 5.0, 5.0}); // 5
+  graph.add_waypoint(test_map_name, { 0.0, -5.0, 0}); // 0
+  graph.add_waypoint(test_map_name, {-5.0, 0.0, 0}); // 1
+  graph.add_waypoint(test_map_name, { 0.0, 0.0, 0}); // 2
+  graph.add_waypoint(test_map_name, { 5.0,  0.0, 0}); // 3
+  graph.add_waypoint(test_map_name, { 0.0, 5.0, 0}); // 4
+  graph.add_waypoint(test_map_name, { 5.0, 5.0, 0}); // 5
 
   /*
    *         4-----5
@@ -3061,8 +3063,8 @@ SCENARIO("Close start", "[close_start]")
   const auto result =
       planner.plan(
         {
-          rmf_traffic::agv::Plan::Start(time, 2, 0, Eigen::Vector2d{0.5, 0.0}),
-          rmf_traffic::agv::Plan::Start(time, 3, 0, Eigen::Vector2d{0.5, 0.0})
+          rmf_traffic::agv::Plan::Start(time, 2, 0, Eigen::Vector3d{0.5, 0.0, 0}),
+          rmf_traffic::agv::Plan::Start(time, 3, 0, Eigen::Vector3d{0.5, 0.0, 0})
         }, 4);
 
   REQUIRE(result);
